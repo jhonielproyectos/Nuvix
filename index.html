@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FLIXY RD - Acceso</title>
+    <title>NUVIX</title>
     <style>
         :root {
             --azul: #0070f3;
@@ -175,7 +175,7 @@
             s.innerText = 'Validando cuenta...';
 
             try {
-                const res = await fetch('https://flixy-rd.pages.dev/user/usuarios.m3u?t=' + Date.now());
+                const res = await fetch('https://nuvix.pages.dev/user/adminuser.m3u?t=' + Date.now());
                 const text = await res.text();
 
                 const bloques = text.split('#EXTM3U').filter(bl => bl.trim() !== "");
