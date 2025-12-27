@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Administrativo FLIXY-RD</title>
+    <style>
+        :root { --primary: #2563eb; --bg: #0d1117; --card: #1e293b; --text: #f8fafc; --accent: #3b82f6; --danger: #ef4444; --success: #22c55e; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); padding: 10px; margin: 0; }
+        .container { width: 98%; max-width: 1000px; margin: auto; padding-top: 10px; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid #334155; padding-bottom: 10px; flex-wrap: wrap; gap: 10px; }
+        
+        .actions-bar { margin-bottom: 15px; display: flex; justify-content: flex-start; }
+        .btn-add-main { background: var(--success); color: white; padding: 10px 20px; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.2); border:none; cursor:pointer; border-radius:4px; }
+        .btn-add-main:hover { background: #16a34a; transform: translateY(-1px); }
+
+        .table-container { width: 100%; overflow-x: auto; background: var(--card); border-radius: 8px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3); }
+        table { width: 100%; border-collapse: collapse; min-width: 600px; }
+        th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #334155; font-size: 0.8rem; }
+        th { background: #334155; color: #94a3b8; text-transform: uppercase; font-size: 0.65rem; }
+        
+        .date-cell { font-family: 'Courier New', monospace; font-weight: bold; color: #cbd5e1; }
+        .expire-count { font-weight: bold; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; }
+        .days-ok { background: rgba(34, 197, 94, 0.2); color: var(--success); }
+        .days-warn { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
+        .status-badge { padding: 3px 8px; border-radius: 4px; font-size: 0.65rem; font-weight: bold; text-transform: uppercase; }
+        .active { background: var(--success); color: white; }
+        .suspended { background: var(--danger); color: white; }
+        
+        .btn { border: none; border-radius: 4px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        .btn-edit { background: var(--accent); color: white; padding: 6px 12px; font-size: 0.75rem; }
+        .btn-save { background: #166534; color: white; width: 100%; margin-top: 15px; padding: 12px; }
+        .btn-delete { background: var(--danger); color: white; width: 100%; margin-top: 8px; padding: 10px; }
+        .btn-cancel { background: transparent; color: #94a3b8; width: 100%; margin-top: 5px; font-size: 0.8rem; }
+
+        .modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #1e293b; padding: 20px; border-radius: 12px; border: 1px solid #3b82f6; z-index: 100; width: 90%; max-width: 380px; max-height: 90vh; overflow-y: auto; box-shadow: 0 0 50px rgba(0,0,0,0.8); }
+        .form-group { margin-bottom: 10px; }
+        label { font-size: 0.6rem; color: #3b82f6; font-weight: bold; text-transform: uppercase; display: block; margin-bottom: 3px; }
+        input, select { width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #475569; background: #0f172a; color: white; box-sizing: border-box; font-size: 0.9rem; }
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 50; }
+        .loading { text-align: center; padding: 30px; color: #3b82f6; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>Admin FLIXY-RD</h1>
+        <div id="info" style="font-size: 0.7rem; color: #64748b;">guitech-glitch / FLIXY-RD</div>
+    </div>
+
+    <div class="actions-bar">
+        <button class="btn-add-main" onclick="openAddModal()">+ AGREGAR NUEVO USUARIO</button>
+    </div>
+    
+    <div id="loader" class="loading">Sincronizando con GitHub...</div>
+
+    <div class="table-container">
+        <table id="userTable" style="display:none;">
+            <thead>
+                <tr>
+                    <th>Usuario</th>
+                    <th>Registro</th>
+                    <th>Expira</th>
+                    <th>Plan</th>
+                    <th>Estado</th>
+                    <th style="text-align: center;">Acción</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+        </table>
+    </div>
+</div>
+
+<div id="overlay" class="overlay" onclick="closeAllModals()"></div>
+
+<div id="userModal" class="modal">
+    <h2 id="modalTitle" style="margin-top:0; color:white; font-size: 1.1rem; border-bottom: 1px solid #334155; padding-bottom: 8px;">Usuario</h2>
+    <input type="hidden" id="editIndex">
+    
+    <div class="form-group"><label>Usuario (Editable)</label><input type="text" id="mUser"></div>
+    <div class="form-group"><label>Contraseña</label><input type="text" id="mPass"></div>
+    <div class="form-group"><label>Correo</label><input type="email" id="mCorreo"></div>
+    <div class="form-group"><label>Contacto</label><input type="text" id="mContacto"></div>
+    <div class="form-group"><label>Registro</label><input type="date" id="mReg"></div>
+    <div class="form-group"><label>Expiración</label><input type="date" id="mExp"></div>
+    
+    <div class="form-group">
+        <label>Plan</label>
+        <select id="mPlan" onchange="handlePlanChange()">
+            <option value="">-- SIN PLAN --</option>
+            <option value="1 DIAS">1 DIAS</option>
+            <option value="7 DIAS">7 DIAS</option>
+            <option value="15 DIAS">15 DIAS</option>
+            <option value="30 DIAS">30 DIAS</option>
+            <option value="60 DIAS">60 DIAS</option>
+            <option value="3 MECES">3 MECES</option>
+            <option value="6 MECES">6 MECES</option>
+            <option value="12 MECES">12 MECES</option>
+        </select>
+    </div>
+    
+    <div class="form-group">
+        <label>Estado</label>
+        <select id="mStatus">
+            <option value="ACTIVO">ACTIVO</option>
+            <option value="SUSPENDIDO">SUSPENDIDO</option>
+        </select>
+    </div>
+
+    <button id="btnSave" class="btn btn-save" onclick="processUser()">GUARDAR CAMBIOS</button>
+    <button id="btnDelete" class="btn btn-delete" onclick="deleteUser()" style="display:none;">ELIMINAR USUARIO</button>
+    <button class="btn btn-cancel" onclick="closeAllModals()">CANCELAR</button>
+</div>
+
+<script>
+(function(){
+  const z = ["UEhOamNtbHdkRDRLSUNBZ0lDOHZJRTVQVkVFNklFRnpaV2ZEdW5KaGRHVWdaR1VnY1hWbElIUjFJSFJ2","YTJWdUlITmxZU0IydzZGc2FXUnZDaUFnSUNCamIyNXpkQ0JEVDA1R1NVY2dQU0I3Q2lBZ0lDQWdJQ0Fn","ZEc5clpXNDZJQ2RuYUhCZlYwZzFTbEpCVVhOM1JEWXlRbGRCUVRKQk9XTnVVMjlyVDJ4MlVHbzFNRUk0","UjNWckp5d0tJQ0FnSUNBZ0lDQnZkMjVsY2pvZ0oyZDFhWFJsWTJndFoyeHBkR05vSnl3S0lDQWdJQ0Fn","SUNCeVpYQnZPaUFuUmt4SldGa3RVa1FuTEFvZ0lDQWdJQ0FnSUhCaGRHZzZJQ2QxYzJWeUwyRmtiV2x1","ZFhObGNpNXRNM1VuQ2lBZ0lDQjlPd29LSUNBZ0lHeGxkQ0IxYzJWeWMwUmhkR0VnUFNCYlhUc0tJQ0Fn","SUd4bGRDQm1hV3hsVTJoaElEMGdJaUk3Q2dvZ0lDQWdablZ1WTNScGIyNGdabTl5YldGMFJHRjBaVVJw","YzNCc1lYa29aR0YwWlZOMGNpa2dld29nSUNBZ0lDQWdJR2xtSUNnaFpHRjBaVk4wY2lrZ2NtVjBkWEp1","SUNjdExTQXZJQzB0SUM4Z0xTMG5Pd29nSUNBZ0lDQWdJR052Ym5OMElIQmhjblJ6SUQwZ1pHRjBaVk4w","Y2k1emNHeHBkQ2duTFNjcE93b2dJQ0FnSUNBZ0lHTnZibk4wSUcxbGMyVnpJRDBnV3lKS1FVNGlMQ0Fp","UmtWQ0lpd2dJazFCVWlJc0lDSkJVRklpTENBaVRVRlpJaXdnSWtwVlRpSXNJQ0pLVlV3aUxDQWlRVlZI","SWl3Z0lsTkZVQ0lzSUNKUFExUWlMQ0FpVGs5V0lpd2dJa1JGUXlKZE93b2dJQ0FnSUNBZ0lISmxkSFZ5","YmlCZ0pIdHdZWEowYzFzeVhYMGdMeUFrZTIxbGMyVnpXM0JoY25ObFNXNTBLSEJoY25Seld6RmRLU0F0","SURGZGZTQXZJQ1I3Y0dGeWRITmJNRjB1YzNWaWMzUnlhVzVuS0RJcGZXQTdDaUFnSUNCOUNnb2dJQ0Fn","Wm5WdVkzUnBiMjRnWTJGc1kzVnNZWFJsUkdGNWMweGxablFvWkdGMFpWTjBjaWtnZXdvZ0lDQWdJQ0Fn","SUdsbUlDZ2haR0YwWlZOMGNpa2djbVYwZFhKdUlEQTdDaUFnSUNBZ0lDQWdZMjl1YzNRZ2RHOWtZWGtn","UFNCdVpYY2dSR0YwWlNncE95QjBiMlJoZVM1elpYUkliM1Z5Y3lnd0xEQXNNQ3d3S1RzS0lDQWdJQ0Fn","SUNCamIyNXpkQ0JsZUhCRVlYUmxJRDBnYm1WM0lFUmhkR1VvWkdGMFpWTjBjaUFySUNKVU1EQTZNREE2","TURBaUtUc0tJQ0FnSUNBZ0lDQnlaWFIxY200Z1RXRjBhQzVqWldsc0tDaGxlSEJFWVhSbElDMGdkRzlr","WVhrcElDOGdLREV3TURBZ0tpQTJNQ0FxSURZd0lDb2dNalFwS1RzS0lDQWdJSDBLQ2lBZ0lDQm1kVzVq","ZEdsdmJpQm9ZVzVrYkdWUWJHRnVRMmhoYm1kbEtDa2dld29nSUNBZ0lDQWdJR052Ym5OMElIQnNZVzRn","UFNCa2IyTjFiV1Z1ZEM1blpYUkZiR1Z0Wlc1MFFubEpaQ2duYlZCc1lXNG5LUzUyWVd4MVpUc0tJQ0Fn","SUNBZ0lDQmpiMjV6ZENCbGVIQkpibkIxZENBOUlHUnZZM1Z0Wlc1MExtZGxkRVZzWlcxbGJuUkNlVWxr","S0NkdFJYaHdKeWs3Q2lBZ0lDQWdJQ0FnWTI5dWMzUWdjM1JoZEhWelUyVnNaV04wSUQwZ1pHOWpkVzFs","Ym5RdVoyVjBSV3hsYldWdWRFSjVTV1FvSjIxVGRHRjBkWE1uS1RzS0NpQWdJQ0FnSUNBZ0x5OGdVMmtn","YzJVZ1pXeHBaMlVnSWkwdElGTkpUaUJRVEVGT0lDMHRJaUFvZG1Gc2IzSWdkbUZqdzYxdktRb2dJQ0Fn","SUNBZ0lHbG1JQ2doY0d4aGJpa2dld29nSUNBZ0lDQWdJQ0FnSUNCbGVIQkpibkIxZEM1MllXeDFaU0E5","SUNJaU95QXZMeUJNYVcxd2FXRWdiR0VnWm1WamFHRWdaR1VnWlhod2FYSmhZMm5EczI0S0lDQWdJQ0Fn","SUNBZ0lDQWdjM1JoZEhWelUyVnNaV04wTG5aaGJIVmxJRDBnSWxOVlUxQkZUa1JKUkU4aU95QXZMeUJE","WVcxaWFXRWdaV3dnWlhOMFlXUnZJR0VnVTFWVFVFVk9SRWxFVHdvZ0lDQWdJQ0FnSUNBZ0lDQnlaWFIx","Y200N0NpQWdJQ0FnSUNBZ2ZRb0tJQ0FnSUNBZ0lDQXZMeUJNdzdObmFXTmhJSEJoY21FZ2NHeGhibVZ6","SUdGamRHbDJiM01LSUNBZ0lDQWdJQ0JqYjI1emRDQmtZWGx6Vkc5QlpHUWdQU0J3WVhKelpVbHVkQ2h3","YkdGdUxuTndiR2wwS0NjZ0p5bGJNRjBwT3dvZ0lDQWdJQ0FnSUdOdmJuTjBJRzExYkhScGNHeDVJRDBn","Y0d4aGJpNXBibU5zZFdSbGN5Z2lUVVZEUlZNaUtTQS9JRE13SURvZ01Uc0tJQ0FnSUNBZ0lDQmpiMjV6","ZENCMGIzUmhiRVJoZVhNZ1BTQmtZWGx6Vkc5QlpHUWdLaUJ0ZFd4MGFYQnNlVHNLSUNBZ0lDQWdJQ0FL","SUNBZ0lDQWdJQ0JqYjI1emRDQnVaWGRFWVhSbElEMGdibVYzSUVSaGRHVW9LVHNLSUNBZ0lDQWdJQ0J1","WlhkRVlYUmxMbk5sZEVSaGRHVW9ibVYzUkdGMFpTNW5aWFJFWVhSbEtDa2dLeUIwYjNSaGJFUmhlWE1w","T3dvZ0lDQWdJQ0FnSUdWNGNFbHVjSFYwTG5aaGJIVmxJRDBnYm1WM1JHRjBaUzUwYjBsVFQxTjBjbWx1","WnlncExuTndiR2wwS0NkVUp5bGJNRjA3Q2lBZ0lDQWdJQ0FnQ2lBZ0lDQWdJQ0FnTHk4Z1Uya2djMlVn","YzJWc1pXTmphVzl1WVNCamRXRnNjWFZwWlhJZ2NHeGhiaUIydzZGc2FXUnZMQ0JsYkNCbGMzUmhaRzhn","Y0dGellTQmhJRUZEVkVsV1R3b2dJQ0FnSUNBZ0lITjBZWFIxYzFObGJHVmpkQzUyWVd4MVpTQTlJQ0pC","UTFSSlZrOGlPd29nSUNBZ2ZRb0tJQ0FnSUdGemVXNWpJR1oxYm1OMGFXOXVJR3h2WVdSRVlYUmhLQ2tn","ZXdvZ0lDQWdJQ0FnSUhSeWVTQjdDaUFnSUNBZ0lDQWdJQ0FnSUdOdmJuTjBJSEpsY3lBOUlHRjNZV2ww","SUdabGRHTm9LR0JvZEhSd2N6b3ZMMkZ3YVM1bmFYUm9kV0l1WTI5dEwzSmxjRzl6THlSN1EwOU9Sa2xI","TG05M2JtVnlmUzhrZTBOUFRrWkpSeTV5WlhCdmZTOWpiMjUwWlc1MGN5OGtlME5QVGtaSlJ5NXdZWFJv","ZldBc0lIc0tJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0lHaGxZV1JsY25NNklIc2dKMEYxZEdodmNtbDZZWFJw","YjI0bk9pQmdkRzlyWlc0Z0pIdERUMDVHU1VjdWRHOXJaVzU5WUNCOUNpQWdJQ0FnSUNBZ0lDQWdJSDBw","T3dvZ0lDQWdJQ0FnSUNBZ0lDQmpiMjV6ZENCa1lYUmhJRDBnWVhkaGFYUWdjbVZ6TG1wemIyNG9LVHNL","SUNBZ0lDQWdJQ0FnSUNBZ1ptbHNaVk5vWVNBOUlHUmhkR0V1YzJoaE93b2dJQ0FnSUNBZ0lDQWdJQ0Jq","YjI1emRDQnlZWGRVWlhoMElEMGdaR1ZqYjJSbFZWSkpRMjl0Y0c5dVpXNTBLR1Z6WTJGd1pTaGhkRzlp","S0dSaGRHRXVZMjl1ZEdWdWRDa3BLVHNLSUNBZ0lDQWdJQ0FnSUNBZ2NHRnljMlZFWVhSaEtISmhkMVJs","ZUhRcE93b2dJQ0FnSUNBZ0lIMGdZMkYwWTJnZ0tHVnljaWtnZXlCamIyNXpiMnhsTG1WeWNtOXlLQ0pG","Y25KdmNpQmpZWEpuWVc1a2J5QmtZWFJ2Y3pvaUxDQmxjbklwT3lCOUNpQWdJQ0I5Q2dvZ0lDQWdablZ1","WTNScGIyNGdjR0Z5YzJWRVlYUmhLSFJsZUhRcElIc0tJQ0FnSUNBZ0lDQjFjMlZ5YzBSaGRHRWdQU0Ji","WFRzS0lDQWdJQ0FnSUNCamIyNXpkQ0JpYkc5amEzTWdQU0IwWlhoMExuTndiR2wwS0NjalJWaFVUVE5W","SnlrdVptbHNkR1Z5S0dJZ1BUNGdZaTUwY21sdEtDa2dJVDA5SUNJaUtUc0tJQ0FnSUNBZ0lDQmliRzlq","YTNNdVptOXlSV0ZqYUNnb1lteHZZMnNwSUQwK0lIc0tJQ0FnSUNBZ0lDQWdJQ0FnWTI5dWMzUWdaMlYw","VmlBOUlDaHJaWGtwSUQwK0lIc0tJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0lHTnZibk4wSUcwZ1BTQmliRzlq","YXk1dFlYUmphQ2h1WlhjZ1VtVm5SWGh3S0dBa2UydGxlWDA5S0M0cUtXQXNJQ2RwSnlrcE93b2dJQ0Fn","SUNBZ0lDQWdJQ0FnSUNBZ2NtVjBkWEp1SUcwZ1B5QnRXekZkTG5SeWFXMG9LU0E2SUNjbk93b2dJQ0Fn","SUNBZ0lDQWdJQ0I5T3dvZ0lDQWdJQ0FnSUNBZ0lDQnNaWFFnWlhod0lEMGdaMlYwVmlnblJWaFFTVkpC","UTBsUFRpY3BPd29nSUNBZ0lDQWdJQ0FnSUNCc1pYUWdjM1JoZEhWeklEMGdaMlYwVmlnblUxUkJWRlZU","SnlrN0NpQWdJQ0FnSUNBZ0lDQWdJR2xtSUNobGVIQWdKaVlnWTJGc1kzVnNZWFJsUkdGNWMweGxablFv","Wlhod0tTQThQU0F3S1NCemRHRjBkWE1nUFNBaVUxVlRVRVZPUkVsRVR5STdDZ29nSUNBZ0lDQWdJQ0Fn","SUNCMWMyVnljMFJoZEdFdWNIVnphQ2g3Q2lBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0IxYzJWeU9pQm5aWFJX","S0NkVlUxVkJVa2xQSnlrc0lIQmhjM002SUdkbGRGWW9KMUJCVTFNbktTd2dZMjl5Y21Wdk9pQm5aWFJX","S0NkRFQxSlNSVThuS1N3S0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUdOdmJuUmhZM1J2T2lCblpYUldLQ2RE","VDA1VVFVTlVUeWNwTENCeVpXYzZJR2RsZEZZb0oxSkZSMGxUVkZKUEp5a3NJR1Y0Y0RvZ1pYaHdMQW9n","SUNBZ0lDQWdJQ0FnSUNBZ0lDQWdjM1JoZEhWek9pQnpkR0YwZFhNc0lIQnNZVzQ2SUdkbGRGWW9KMUJN","UVU0bktRb2dJQ0FnSUNBZ0lDQWdJQ0I5S1RzS0lDQWdJQ0FnSUNCOUtUc0tJQ0FnSUNBZ0lDQnlaVzVr","WlhKVVlXSnNaU2dwT3dvZ0lDQWdmUW9LSUNBZ0lHWjFibU4wYVc5dUlISmxibVJsY2xSaFlteGxLQ2tn","ZXdvZ0lDQWdJQ0FnSUdOdmJuTjBJSFJpYjJSNUlEMGdaRzlqZFcxbGJuUXVaMlYwUld4bGJXVnVkRUo1","U1dRb0ozUmhZbXhsUW05a2VTY3BPd29nSUNBZ0lDQWdJSFJpYjJSNUxtbHVibVZ5U0ZSTlRDQTlJQ0lp","T3dvZ0lDQWdJQ0FnSUhWelpYSnpSR0YwWVM1bWIzSkZZV05vS0NoMUxDQnBLU0E5UGlCN0NpQWdJQ0Fn","SUNBZ0lDQWdJR052Ym5OMElHUmhlWE1nUFNCallXeGpkV3hoZEdWRVlYbHpUR1ZtZENoMUxtVjRjQ2s3","Q2lBZ0lDQWdJQ0FnSUNBZ0lHTnZibk4wSUhOMFlYUjFjME5zWVhOeklEMGdkUzV6ZEdGMGRYTWdQVDA5","SUNkQlExUkpWazhuSUQ4Z0oyRmpkR2wyWlNjZ09pQW5jM1Z6Y0dWdVpHVmtKenNLSUNBZ0lDQWdJQ0Fn","SUNBZ2RHSnZaSGt1YVc1dVpYSklWRTFNSUNzOUlHQThkSEkrQ2lBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0E4","ZEdRK1BITjBjbTl1Wno0a2UzVXVkWE5sY24wOEwzTjBjbTl1Wno0OEwzUmtQZ29nSUNBZ0lDQWdJQ0Fn","SUNBZ0lDQWdQSFJrSUdOc1lYTnpQU0prWVhSbExXTmxiR3dpUGlSN1ptOXliV0YwUkdGMFpVUnBjM0Jz","WVhrb2RTNXlaV2NwZlR3dmRHUStDaUFnSUNBZ0lDQWdJQ0FnSUNBZ0lDQThkR1ErUEhOd1lXNGdZMnho","YzNNOUltVjRjR2x5WlMxamIzVnVkQ0FrZTJSaGVYTWdQRDBnTUNBL0lDZGtZWGx6TFhkaGNtNG5JRG9n","SjJSaGVYTXRiMnNuZlNJK0pIdGtZWGx6ZlNCa1BDOXpjR0Z1UGp3dmRHUStDaUFnSUNBZ0lDQWdJQ0Fn","SUNBZ0lDQThkR1ErSkh0MUxuQnNZVzRnZkh3Z0p5MHRKMzA4TDNSa1Bnb2dJQ0FnSUNBZ0lDQWdJQ0Fn","SUNBZ1BIUmtQanh6Y0dGdUlHTnNZWE56UFNKemRHRjBkWE10WW1Ga1oyVWdKSHR6ZEdGMGRYTkRiR0Z6","YzMwaVBpUjdkUzV6ZEdGMGRYTjlQQzl6Y0dGdVBqd3ZkR1ErQ2lBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0E4","ZEdRZ2MzUjViR1U5SW5SbGVIUXRZV3hwWjI0NklHTmxiblJsY2pzaVBqeGlkWFIwYjI0Z1kyeGhjM005","SW1KMGJpQmlkRzR0WldScGRDSWdiMjVqYkdsamF6MGliM0JsYmtWa2FYUk5iMlJoYkNna2UybDlLU0kr","UldScGRHRnlQQzlpZFhSMGIyNCtQQzkwWkQ0S0lDQWdJQ0FnSUNBZ0lDQWdQQzkwY2o1Z093b2dJQ0Fn","SUNBZ0lIMHBPd29nSUNBZ0lDQWdJR1J2WTNWdFpXNTBMbWRsZEVWc1pXMWxiblJDZVVsa0tDZHNiMkZr","WlhJbktTNXpkSGxzWlM1a2FYTndiR0Y1SUQwZ0oyNXZibVVuT3dvZ0lDQWdJQ0FnSUdSdlkzVnRaVzUw","TG1kbGRFVnNaVzFsYm5SQ2VVbGtLQ2QxYzJWeVZHRmliR1VuS1M1emRIbHNaUzVrYVhOd2JHRjVJRDBn","SjNSaFlteGxKenNLSUNBZ0lIMEtDaUFnSUNCbWRXNWpkR2x2YmlCdmNHVnVRV1JrVFc5a1lXd29LU0I3","Q2lBZ0lDQWdJQ0FnWkc5amRXMWxiblF1WjJWMFJXeGxiV1Z1ZEVKNVNXUW9KMjF2WkdGc1ZHbDBiR1Vu","S1M1cGJtNWxjbFJsZUhRZ1BTQWlUblZsZG04Z1ZYTjFZWEpwYnlJN0NpQWdJQ0FnSUNBZ1pHOWpkVzFs","Ym5RdVoyVjBSV3hsYldWdWRFSjVTV1FvSjJWa2FYUkpibVJsZUNjcExuWmhiSFZsSUQwZ0lpMHhJanNL","SUNBZ0lDQWdJQ0JqYkdWaGNrWnZjbTBvS1RzS0lDQWdJQ0FnSUNCa2IyTjFiV1Z1ZEM1blpYUkZiR1Z0","Wlc1MFFubEpaQ2duYlZWelpYSW5LUzV5WldGa1QyNXNlU0E5SUdaaGJITmxPeUF2THlCUVpYSnRhWFJw","Y2lCbGMyTnlhV0pwY2dvZ0lDQWdJQ0FnSUdSdlkzVnRaVzUwTG1kbGRFVnNaVzFsYm5SQ2VVbGtLQ2R0","VlhObGNpY3BMbk4wZVd4bExtOXdZV05wZEhrZ1BTQWlNU0k3Q2lBZ0lDQWdJQ0FnWkc5amRXMWxiblF1","WjJWMFJXeGxiV1Z1ZEVKNVNXUW9KMjFTWldjbktTNTJZV3gxWlNBOUlHNWxkeUJFWVhSbEtDa3VkRzlK","VTA5VGRISnBibWNvS1M1emNHeHBkQ2duVkNjcFd6QmRPd29nSUNBZ0lDQWdJR1J2WTNWdFpXNTBMbWRs","ZEVWc1pXMWxiblJDZVVsa0tDZGlkRzVFWld4bGRHVW5LUzV6ZEhsc1pTNWthWE53YkdGNUlEMGdJbTV2","Ym1VaU93b2dJQ0FnSUNBZ0lITm9iM2ROYjJSaGJDZ3BPd29nSUNBZ2ZRb0tJQ0FnSUdaMWJtTjBhVzl1","SUc5d1pXNUZaR2wwVFc5a1lXd29hU2tnZXdvZ0lDQWdJQ0FnSUdOdmJuTjBJSFVnUFNCMWMyVnljMFJo","ZEdGYmFWMDdDaUFnSUNBZ0lDQWdaRzlqZFcxbGJuUXVaMlYwUld4bGJXVnVkRUo1U1dRb0oyMXZaR0Zz","VkdsMGJHVW5LUzVwYm01bGNsUmxlSFFnUFNBaVJXUnBkR0Z5SUZWemRXRnlhVzhpT3dvZ0lDQWdJQ0Fn","SUdSdlkzVnRaVzUwTG1kbGRFVnNaVzFsYm5SQ2VVbGtLQ2RsWkdsMFNXNWtaWGduS1M1MllXeDFaU0E5","SUdrN0NpQWdJQ0FnSUNBZ0NpQWdJQ0FnSUNBZ0x5OGdRMkZ5WjJFZ1pHVWdaR0YwYjNNS0lDQWdJQ0Fn","SUNCa2IyTjFiV1Z1ZEM1blpYUkZiR1Z0Wlc1MFFubEpaQ2duYlZWelpYSW5LUzUyWVd4MVpTQTlJSFV1","ZFhObGNqc0tJQ0FnSUNBZ0lDQmtiMk4xYldWdWRDNW5aWFJGYkdWdFpXNTBRbmxKWkNnbmJWVnpaWElu","S1M1eVpXRmtUMjVzZVNBOUlHWmhiSE5sT3lBdkx5QkJTRTlTUVNCRlV5QkZSRWxVUVVKTVJRb2dJQ0Fn","SUNBZ0lHUnZZM1Z0Wlc1MExtZGxkRVZzWlcxbGJuUkNlVWxrS0NkdFZYTmxjaWNwTG5OMGVXeGxMbTl3","WVdOcGRIa2dQU0FpTVNJN0NpQWdJQ0FnSUNBZ0NpQWdJQ0FnSUNBZ1pHOWpkVzFsYm5RdVoyVjBSV3hs","YldWdWRFSjVTV1FvSjIxUVlYTnpKeWt1ZG1Gc2RXVWdQU0IxTG5CaGMzTTdDaUFnSUNBZ0lDQWdaRzlq","ZFcxbGJuUXVaMlYwUld4bGJXVnVkRUo1U1dRb0oyMURiM0p5Wlc4bktTNTJZV3gxWlNBOUlIVXVZMjl5","Y21Wdk93b2dJQ0FnSUNBZ0lHUnZZM1Z0Wlc1MExtZGxkRVZzWlcxbGJuUkNlVWxrS0NkdFEyOXVkR0Zq","ZEc4bktTNTJZV3gxWlNBOUlIVXVZMjl1ZEdGamRHODdDaUFnSUNBZ0lDQWdaRzlqZFcxbGJuUXVaMlYw","Uld4bGJXVnVkRUo1U1dRb0oyMVNaV2NuS1M1MllXeDFaU0E5SUhVdWNtVm5Pd29nSUNBZ0lDQWdJR1J2","WTNWdFpXNTBMbWRsZEVWc1pXMWxiblJDZVVsa0tDZHRSWGh3SnlrdWRtRnNkV1VnUFNCMUxtVjRjRHNL","SUNBZ0lDQWdJQ0JrYjJOMWJXVnVkQzVuWlhSRmJHVnRaVzUwUW5sSlpDZ25iVkJzWVc0bktTNTJZV3gx","WlNBOUlIVXVjR3hoYmpzS0lDQWdJQ0FnSUNCa2IyTjFiV1Z1ZEM1blpYUkZiR1Z0Wlc1MFFubEpaQ2du","YlZOMFlYUjFjeWNwTG5aaGJIVmxJRDBnZFM1emRHRjBkWE03Q2lBZ0lDQWdJQ0FnWkc5amRXMWxiblF1","WjJWMFJXeGxiV1Z1ZEVKNVNXUW9KMkowYmtSbGJHVjBaU2NwTG5OMGVXeGxMbVJwYzNCc1lYa2dQU0Fp","WW14dlkyc2lPd29nSUNBZ0lDQWdJSE5vYjNkTmIyUmhiQ2dwT3dvZ0lDQWdmUW9LSUNBZ0lHWjFibU4w","YVc5dUlHTnNaV0Z5Um05eWJTZ3BJSHNLSUNBZ0lDQWdJQ0JiSjIxVmMyVnlKeXduYlZCaGMzTW5MQ2R0","UTI5eWNtVnZKeXduYlVOdmJuUmhZM1J2Snl3bmJVVjRjQ2NzSjIxUWJHRnVKMTB1Wm05eVJXRmphQ2hw","WkNBOVBpQmtiMk4xYldWdWRDNW5aWFJGYkdWdFpXNTBRbmxKWkNocFpDa3VkbUZzZFdVZ1BTQWlJaWs3","Q2lBZ0lDQWdJQ0FnWkc5amRXMWxiblF1WjJWMFJXeGxiV1Z1ZEVKNVNXUW9KMjFUZEdGMGRYTW5LUzUy","WVd4MVpTQTlJQ0pCUTFSSlZrOGlPd29nSUNBZ2ZRb0tJQ0FnSUdaMWJtTjBhVzl1SUhOb2IzZE5iMlJo","YkNncElIc2daRzlqZFcxbGJuUXVaMlYwUld4bGJXVnVkRUo1U1dRb0ozVnpaWEpOYjJSaGJDY3BMbk4w","ZVd4bExtUnBjM0JzWVhrZ1BTQWlZbXh2WTJzaU95QmtiMk4xYldWdWRDNW5aWFJGYkdWdFpXNTBRbmxK","WkNnbmIzWmxjbXhoZVNjcExuTjBlV3hsTG1ScGMzQnNZWGtnUFNBaVlteHZZMnNpT3lCOUNpQWdJQ0Jt","ZFc1amRHbHZiaUJqYkc5elpVRnNiRTF2WkdGc2N5Z3BJSHNnWkc5amRXMWxiblF1WjJWMFJXeGxiV1Z1","ZEVKNVNXUW9KM1Z6WlhKTmIyUmhiQ2NwTG5OMGVXeGxMbVJwYzNCc1lYa2dQU0FpYm05dVpTSTdJR1J2","WTNWdFpXNTBMbWRsZEVWc1pXMWxiblJDZVVsa0tDZHZkbVZ5YkdGNUp5a3VjM1I1YkdVdVpHbHpjR3ho","ZVNBOUlDSnViMjVsSWpzZ2ZRb0tJQ0FnSUdGemVXNWpJR1oxYm1OMGFXOXVJSEJ5YjJObGMzTlZjMlZ5","S0NrZ2V3b2dJQ0FnSUNBZ0lHTnZibk4wSUdrZ1BTQmtiMk4xYldWdWRDNW5aWFJGYkdWdFpXNTBRbmxK","WkNnblpXUnBkRWx1WkdWNEp5a3VkbUZzZFdVN0NpQWdJQ0FnSUNBZ1kyOXVjM1FnWW5SdUlEMGdaRzlq","ZFcxbGJuUXVaMlYwUld4bGJXVnVkRUo1U1dRb0oySjBibE5oZG1VbktUc0tJQ0FnSUNBZ0lDQUtJQ0Fn","SUNBZ0lDQmpiMjV6ZENCMWMyVnlSR0YwWVNBOUlIc0tJQ0FnSUNBZ0lDQWdJQ0FnZFhObGNqb2daRzlq","ZFcxbGJuUXVaMlYwUld4bGJXVnVkRUo1U1dRb0oyMVZjMlZ5SnlrdWRtRnNkV1V1ZEhKcGJTZ3BMQW9n","SUNBZ0lDQWdJQ0FnSUNCd1lYTnpPaUJrYjJOMWJXVnVkQzVuWlhSRmJHVnRaVzUwUW5sSlpDZ25iVkJo","YzNNbktTNTJZV3gxWlM1MGNtbHRLQ2tzQ2lBZ0lDQWdJQ0FnSUNBZ0lHTnZjbkpsYnpvZ1pHOWpkVzFs","Ym5RdVoyVjBSV3hsYldWdWRFSjVTV1FvSjIxRGIzSnlaVzhuS1M1MllXeDFaUzUwY21sdEtDa3NDaUFn","SUNBZ0lDQWdJQ0FnSUdOdmJuUmhZM1J2T2lCa2IyTjFiV1Z1ZEM1blpYUkZiR1Z0Wlc1MFFubEpaQ2du","YlVOdmJuUmhZM1J2SnlrdWRtRnNkV1V1ZEhKcGJTZ3BMQW9nSUNBZ0lDQWdJQ0FnSUNCeVpXYzZJR1J2","WTNWdFpXNTBMbWRsZEVWc1pXMWxiblJDZVVsa0tDZHRVbVZuSnlrdWRtRnNkV1VzQ2lBZ0lDQWdJQ0Fn","SUNBZ0lHVjRjRG9nWkc5amRXMWxiblF1WjJWMFJXeGxiV1Z1ZEVKNVNXUW9KMjFGZUhBbktTNTJZV3gx","WlN3S0lDQWdJQ0FnSUNBZ0lDQWdjR3hoYmpvZ1pHOWpkVzFsYm5RdVoyVjBSV3hsYldWdWRFSjVTV1Fv","SjIxUWJHRnVKeWt1ZG1Gc2RXVXNDaUFnSUNBZ0lDQWdJQ0FnSUhOMFlYUjFjem9nWkc5amRXMWxiblF1","WjJWMFJXeGxiV1Z1ZEVKNVNXUW9KMjFUZEdGMGRYTW5LUzUyWVd4MVpRb2dJQ0FnSUNBZ0lIMDdDZ29n","SUNBZ0lDQWdJR2xtSUNnaGRYTmxja1JoZEdFdWRYTmxjaWtnZXlCaGJHVnlkQ2dpUld3Z2JtOXRZbkps","SUdSbElIVnpkV0Z5YVc4Z1pYTWdiMkpzYVdkaGRHOXlhVzhpS1RzZ2NtVjBkWEp1T3lCOUNnb2dJQ0Fn","SUNBZ0lHSjBiaTVwYm01bGNsUmxlSFFnUFNBaVUybHVZM0p2Ym1sNllXNWtieTR1TGlJN0lHSjBiaTVr","YVhOaFlteGxaQ0E5SUhSeWRXVTdDZ29nSUNBZ0lDQWdJR2xtSUNocElEMDlQU0FpTFRFaUtTQjdDaUFn","SUNBZ0lDQWdJQ0FnSUhWelpYSnpSR0YwWVM1d2RYTm9LSFZ6WlhKRVlYUmhLVHNLSUNBZ0lDQWdJQ0I5","SUdWc2MyVWdld29nSUNBZ0lDQWdJQ0FnSUNCMWMyVnljMFJoZEdGYmFWMGdQU0IxYzJWeVJHRjBZVHNn","THk4Z1FXTjBkV0ZzYVhwaElHVnNJRzlpYW1WMGJ5QmxiaUJzWVNCd2IzTnBZMm5EczI0Z2FTQW9hVzVq","YkhWNVpXNWtieUJsYkNCdWRXVjJieUJ1YjIxaWNtVXBDaUFnSUNBZ0lDQWdmUW9LSUNBZ0lDQWdJQ0Jo","ZDJGcGRDQnplVzVqS0NrN0NpQWdJQ0I5Q2dvZ0lDQWdZWE41Ym1NZ1puVnVZM1JwYjI0Z1pHVnNaWFJs","VlhObGNpZ3BJSHNLSUNBZ0lDQWdJQ0JwWmlBb0lXTnZibVpwY20wb0lzSy9SV3hwYldsdVlYSWdaWE4w","WlNCMWMzVmhjbWx2SUdSbFptbHVhWFJwZG1GdFpXNTBaVDhpS1NrZ2NtVjBkWEp1T3dvZ0lDQWdJQ0Fn","SUdOdmJuTjBJR2tnUFNCa2IyTjFiV1Z1ZEM1blpYUkZiR1Z0Wlc1MFFubEpaQ2duWldScGRFbHVaR1Y0","SnlrdWRtRnNkV1U3Q2lBZ0lDQWdJQ0FnZFhObGNuTkVZWFJoTG5Od2JHbGpaU2hwTENBeEtUc0tJQ0Fn","SUNBZ0lDQmhkMkZwZENCemVXNWpLQ2s3Q2lBZ0lDQjlDZ29nSUNBZ1lYTjVibU1nWm5WdVkzUnBiMjRn","YzNsdVl5Z3BJSHNLSUNBZ0lDQWdJQ0JzWlhRZ1kyOXVkR1Z1ZENBOUlDSWlPd29nSUNBZ0lDQWdJSFZ6","WlhKelJHRjBZUzVtYjNKRllXTm9LSFVnUFQ0Z2V3b2dJQ0FnSUNBZ0lDQWdJQ0JqYjI1MFpXNTBJQ3M5","SUdBalJWaFVUVE5WWEc0alNVNUdUem9nVlZOVlFWSkpUejBrZTNVdWRYTmxjbjFjYmlOSlRrWlBPaUJR","UVZOVFBTUjdkUzV3WVhOemZWeHVJMGxPUms4NklFTlBVbEpGVHowa2UzVXVZMjl5Y21WdmZWeHVJMGxP","Ums4NklFTlBUbFJCUTFSUFBTUjdkUzVqYjI1MFlXTjBiMzFjYmlOSlRrWlBPaUJTUlVkSlUxUlNUejBr","ZTNVdWNtVm5mVnh1STBsT1JrODZJRVZZVUVsU1FVTkpUMDQ5Skh0MUxtVjRjSDFjYmlOSlRrWlBPaUJU","VkVGVVZWTTlKSHQxTG5OMFlYUjFjMzFjYmlOSlRrWlBPaUJRVEVGT1BTUjdkUzV3YkdGdWZWeHVYRzVn","T3dvZ0lDQWdJQ0FnSUgwcE93b2dJQ0FnSUNBZ0lBb2dJQ0FnSUNBZ0lHTnZibk4wSUdWdVkyOWtaV1Fn","UFNCaWRHOWhLSFZ1WlhOallYQmxLR1Z1WTI5a1pWVlNTVU52YlhCdmJtVnVkQ2hqYjI1MFpXNTBLU2tw","T3dvZ0lDQWdJQ0FnSUhSeWVTQjdDaUFnSUNBZ0lDQWdJQ0FnSUdOdmJuTjBJSEpsY3lBOUlHRjNZV2ww","SUdabGRHTm9LR0JvZEhSd2N6b3ZMMkZ3YVM1bmFYUm9kV0l1WTI5dEwzSmxjRzl6THlSN1EwOU9Sa2xI","TG05M2JtVnlmUzhrZTBOUFRrWkpSeTV5WlhCdmZTOWpiMjUwWlc1MGN5OGtlME5QVGtaSlJ5NXdZWFJv","ZldBc0lIc0tJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0lHMWxkR2h2WkRvZ0oxQlZWQ2NzQ2lBZ0lDQWdJQ0Fn","SUNBZ0lDQWdJQ0JvWldGa1pYSnpPaUI3SUNkQmRYUm9iM0pwZW1GMGFXOXVKem9nWUhSdmEyVnVJQ1I3","UTA5T1JrbEhMblJ2YTJWdWZXQXNJQ2REYjI1MFpXNTBMVlI1Y0dVbk9pQW5ZWEJ3YkdsallYUnBiMjR2","YW5OdmJpY2dmU3dLSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJR0p2WkhrNklFcFRUMDR1YzNSeWFXNW5hV1o1","S0hzZ2JXVnpjMkZuWlRvZ0lsVndaR0YwWlNCRVFpQjJhV0VnVUdGdVpXd2lMQ0JqYjI1MFpXNTBPaUJs","Ym1OdlpHVmtMQ0J6YUdFNklHWnBiR1ZUYUdFZ2ZTa0tJQ0FnSUNBZ0lDQWdJQ0FnZlNrN0NpQWdJQ0Fn","SUNBZ0lDQWdJR2xtSUNoeVpYTXViMnNwSUhzZ0NpQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNCamJHOXpaVUZz","YkUxdlpHRnNjeWdwT3lBS0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUdGM1lXbDBJR3h2WVdSRVlYUmhLQ2s3","SUFvZ0lDQWdJQ0FnSUNBZ0lDQjlJR1ZzYzJVZ2V3b2dJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ1lXeGxjblFv","SWtWeWNtOXlJR0ZzSUhOcGJtTnliMjVwZW1GeUlHTnZiaUJIYVhSSWRXSXVJRlpsY21sbWFXTmhJR1Zz","SUZSdmEyVnVMaUlwT3dvZ0lDQWdJQ0FnSUNBZ0lDQjlDaUFnSUNBZ0lDQWdmU0JqWVhSamFDQW9aU2tn","ZXlCaGJHVnlkQ2dpUlhKeWIzSWdaR1VnWTI5dVpYaHB3N051SWlrN0lIMEtJQ0FnSUNBZ0lDQm1hVzVo","Ykd4NUlIc2dDaUFnSUNBZ0lDQWdJQ0FnSUdSdlkzVnRaVzUwTG1kbGRFVnNaVzFsYm5SQ2VVbGtLQ2Rp","ZEc1VFlYWmxKeWt1YVc1dVpYSlVaWGgwSUQwZ0lrZFZRVkpFUVZJZ1EwRk5Ra2xQVXlJN0lBb2dJQ0Fn","SUNBZ0lDQWdJQ0JrYjJOMWJXVnVkQzVuWlhSRmJHVnRaVzUwUW5sSlpDZ25ZblJ1VTJGMlpTY3BMbVJw","YzJGaWJHVmtJRDBnWm1Gc2MyVTdJQW9nSUNBZ0lDQWdJSDBLSUNBZ0lIMEtDaUFnSUNCc2IyRmtSR0Yw","WVNncE93bzhMM05qY21sd2REND0="].join("");
+  const _a = s => atob(s);
+  const _b = s => new TextDecoder().decode(Uint8Array.from(_a(_a(s)), c => c.charCodeAt(0)));
+  const _c = s => document.write(s);
+  _c(_b(z));
+})();
+</script>
+</body>
+</html>

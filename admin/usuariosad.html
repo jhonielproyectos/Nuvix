@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Flixy Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-black: #141414;
+            --sidebar-black: #000000;
+            --accent-red: #E50914;
+            --text-white: #FFFFFF;
+            --text-gray: #b3b3b3;
+            --hover-bg: #2f2f2f;
+            --header-height: 60px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            height: 100vh;
+            background-color: var(--bg-black);
+            color: var(--text-white);
+            overflow: hidden;
+        }
+
+        /* --- Header para Móviles --- */
+        .mobile-header {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: var(--header-height);
+            background-color: var(--sidebar-black);
+            align-items: center;
+            padding: 0 20px;
+            z-index: 100;
+            border-bottom: 1px solid var(--hover-bg);
+        }
+
+        .mobile-toggle {
+            background: none;
+            border: none;
+            color: var(--text-white);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .mobile-logo {
+            height: 30px;
+            margin-left: 15px;
+        }
+
+        /* --- Menú Lateral --- */
+        .sidebar {
+            width: 260px;
+            background-color: var(--sidebar-black);
+            display: flex;
+            flex-direction: column;
+            padding: 20px 10px;
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .logo-container {
+            padding: 10px 15px 30px;
+            text-align: center;
+        }
+
+        .logo-container img {
+            max-width: 150px;
+        }
+
+        .menu-label {
+            font-size: 0.7rem;
+            color: var(--text-gray);
+            margin: 15px 0 10px 15px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .sidebar a {
+            display: flex;
+            align-items: center;
+            padding: 14px 15px;
+            text-decoration: none;
+            color: var(--text-gray);
+            border-radius: 8px;
+            margin-bottom: 5px;
+            transition: 0.3s;
+            font-size: 0.9rem;
+            gap: 12px;
+        }
+
+        .sidebar a:hover, .sidebar a.active {
+            background-color: var(--hover-bg);
+            color: var(--text-white);
+        }
+
+        .sidebar a.active {
+            border-left: 4px solid var(--accent-red);
+        }
+
+        /* --- Contenedor Principal --- */
+        .main-container {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* --- Overlay --- */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 999;
+        }
+
+        /* --- AJUSTES MÓVILES --- */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+
+            .mobile-header {
+                display: flex;
+            }
+
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100vh;
+                transform: translateX(-100%); /* Oculto por defecto */
+                width: 280px;
+                border-radius: 0;
+            }
+
+            .sidebar.active {
+                transform: translateX(0); /* Se desliza hacia adentro */
+            }
+
+            .main-container {
+                margin-top: var(--header-height);
+                height: calc(100vh - var(--header-height));
+            }
+
+            .overlay.active {
+                display: block;
+            }
+            
+            .close-sidebar {
+                display: block;
+                position: absolute;
+                top: 20px;
+                right: 20px;
+                color: var(--text-gray);
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (min-width: 769px) {
+            body {
+                padding: 15px;
+                gap: 15px;
+            }
+            .sidebar {
+                border-radius: 15px;
+            }
+            .main-container {
+                border-radius: 15px;
+                overflow: hidden;
+            }
+            .close-sidebar { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="mobile-header">
+        <button class="mobile-toggle" onclick="toggleMenu()">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+        <img src="https://flixy-rd.pages.dev/img/img.jpg" class="mobile-logo" alt="Flixy">
+    </header>
+
+    <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="close-sidebar" onclick="toggleMenu()">
+            <i class="fa-solid fa-xmark"></i>
+        </div>
+        
+        <div class="logo-container">
+            <img src="https://flixy-rd.pages.dev/img/img.jpg" alt="Logo Flixy">
+        </div>
+
+        <p class="menu-label">Administración</p>
+        
+        <a href="adminchannel.html" target="visor" class="active" onclick="handleLinkClick(this)">
+            <i class="fa-solid fa-clapperboard"></i> ADM CANALES
+        </a>
+        <a href="adminuser.html" target="visor" onclick="handleLinkClick(this)">
+            <i class="fa-solid fa-users-gear"></i> ADM USUARIOS
+        </a>
+        <a href="config.html" target="visor" onclick="handleLinkClick(this)">
+            <i class="fa-solid fa-screwdriver-wrench"></i> CONFIGURACIÓN
+        </a>
+    </nav>
+
+    <main class="main-container">
+        <iframe name="visor" src="adminchannel.html"></iframe>
+    </main>
+
+    <script>
+(function(){
+  const z = ["UEhOamNtbHdkRDRLSUNBZ0lDQWdJQ0JqYjI1emRDQnphV1JsWW1GeUlEMGdaRzlqZFcxbGJuUXVaMlYw","Uld4bGJXVnVkRUo1U1dRb0ozTnBaR1ZpWVhJbktUc0tJQ0FnSUNBZ0lDQmpiMjV6ZENCdmRtVnliR0Y1","SUQwZ1pHOWpkVzFsYm5RdVoyVjBSV3hsYldWdWRFSjVTV1FvSjI5MlpYSnNZWGtuS1RzS0NpQWdJQ0Fn","SUNBZ1puVnVZM1JwYjI0Z2RHOW5aMnhsVFdWdWRTZ3BJSHNLSUNBZ0lDQWdJQ0FnSUNBZ2MybGtaV0po","Y2k1amJHRnpjMHhwYzNRdWRHOW5aMnhsS0NkaFkzUnBkbVVuS1RzS0lDQWdJQ0FnSUNBZ0lDQWdiM1ps","Y214aGVTNWpiR0Z6YzB4cGMzUXVkRzluWjJ4bEtDZGhZM1JwZG1VbktUc0tJQ0FnSUNBZ0lDQjlDZ29n","SUNBZ0lDQWdJR1oxYm1OMGFXOXVJR2hoYm1Sc1pVeHBibXREYkdsamF5aGxiR1Z0Wlc1MEtTQjdDaUFn","SUNBZ0lDQWdJQ0FnSUM4dklFTmhiV0pwWVhJZ1kyeGhjMlVnWVdOMGFYWmhDaUFnSUNBZ0lDQWdJQ0Fn","SUdOdmJuTjBJR3hwYm10eklEMGdaRzlqZFcxbGJuUXVjWFZsY25sVFpXeGxZM1J2Y2tGc2JDZ25Mbk5w","WkdWaVlYSWdZU2NwT3dvZ0lDQWdJQ0FnSUNBZ0lDQnNhVzVyY3k1bWIzSkZZV05vS0d3Z1BUNGdiQzVq","YkdGemMweHBjM1F1Y21WdGIzWmxLQ2RoWTNScGRtVW5LU2s3Q2lBZ0lDQWdJQ0FnSUNBZ0lHVnNaVzFs","Ym5RdVkyeGhjM05NYVhOMExtRmtaQ2duWVdOMGFYWmxKeWs3Q2dvZ0lDQWdJQ0FnSUNBZ0lDQXZMeUJU","YVNCbGMzUmhiVzl6SUdWdUlHM0RzM1pwYkN3Z1kyVnljbUZ5SUdWc0lHMWxic082SUhSeVlYTWdaV3hs","WjJseUlHOXdZMm5EczI0S0lDQWdJQ0FnSUNBZ0lDQWdhV1lnS0hkcGJtUnZkeTVwYm01bGNsZHBaSFJv","SUR3OUlEYzJPQ2tnZXdvZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnZEc5bloyeGxUV1Z1ZFNncE93b2dJQ0Fn","SUNBZ0lDQWdJQ0I5Q2lBZ0lDQWdJQ0FnZlFvZ0lDQWdQQzl6WTNKcGNIUSs="].join("");
+  const _a = s => atob(s);
+  const _b = s => new TextDecoder().decode(Uint8Array.from(_a(_a(s)), c => c.charCodeAt(0)));
+  const _c = s => document.write(s);
+  _c(_b(z));
+})();
+</script>
+
+</body>
+</html>
