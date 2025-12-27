@@ -76,13 +76,164 @@
     </div>
 
     <script>
-(function(){
-  const z = ["UEhOamNtbHdkRDRLSUNBZ0lDQWdJQ0JqYjI1emRDQk5NMVZmVlZKTUlEMGdKMmgwZEhCek9pOHZabXhw","ZUhrdGNtUXVjR0ZuWlhNdVpHVjJMMkZrYldsdUwyTm9ZVzV1Wld3dWJUTjFKenNLSUNBZ0lDQWdJQ0Jz","WlhRZ1lXeHNRMmhoYm01bGJITWdQU0JiWFN3Z1ptbHNkR1Z5WldSRGFHRnVibVZzY3lBOUlGdGRMQ0Ju","Y21sa1JtOWpkWE5KYm1SbGVDQTlJREFzSUdOMWNuSmxiblJUWldOMGFXOXVJRDBnSWtkU1NVUWlPd29n","SUNBZ0lDQWdJR3hsZENCeVpXTmxiblJEYUdGdWJtVnNjeUE5SUVwVFQwNHVjR0Z5YzJVb2JHOWpZV3hU","ZEc5eVlXZGxMbWRsZEVsMFpXMG9KMlpzYVhoNVgzSmxZMlZ1ZENjcEtTQjhmQ0JiWFRzS0lDQWdJQ0Fn","SUNCc1pYUWdiR0Z6ZEV0bGVWUnBiV1VnUFNBd0xDQkxSVmxmUkVWTVFWa2dQU0F4TnpBN0Nnb2dJQ0Fn","SUNBZ0lHTnZibk4wSUZSV1gwdEZXVk1nUFNCN0lBb2dJQ0FnSUNBZ0lDQWdJQ0JWVURvZ1d6TTRMQ0F4","T1Ywc0lFUlBWMDQ2SUZzME1Dd2dNakJkTENCTVJVWlVPaUJiTXpjc0lESXhYU3dnVWtsSFNGUTZJRnN6","T1N3Z01qSmRMQ0FLSUNBZ0lDQWdJQ0FnSUNBZ1JVNVVSVkk2SUZzeE15d2dNak5kTENCQ1FVTkxPaUJi","TWpjc0lEZ3NJRFEyTVYwZ0NpQWdJQ0FnSUNBZ2ZUc0tDaUFnSUNBZ0lDQWdZWE41Ym1NZ1puVnVZM1Jw","YjI0Z2FXNXBkQ2dwSUhzS0lDQWdJQ0FnSUNBZ0lDQWdkSEo1SUhzS0lDQWdJQ0FnSUNBZ0lDQWdJQ0Fn","SUd4bGRDQnlaWE1nUFNCaGQyRnBkQ0JtWlhSamFDaE5NMVZmVlZKTUtTNWpZWFJqYUNnb0tTQTlQaUJt","WlhSamFDZ25hSFIwY0hNNkx5OWpiM0p6Y0hKdmVIa3VhVzh2UHljZ0t5QmxibU52WkdWVlVrbERiMjF3","YjI1bGJuUW9UVE5WWDFWU1RDa3BLVHNLSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJR052Ym5OMElHUmhkR0Vn","UFNCaGQyRnBkQ0J5WlhNdWRHVjRkQ2dwT3dvZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnY0dGeWMyVW9aR0Yw","WVNrN0NpQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNBS0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUdkeWFXUkdiMk4x","YzBsdVpHVjRJRDBnTURzS0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUdOMWNuSmxiblJUWldOMGFXOXVJRDBn","SWtkU1NVUWlPeUFLSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJSE5sZEZScGJXVnZkWFFvZFhCa1lYUmxSM0pw","WkVadlkzVnpMQ0F4TlRBcE93b2dJQ0FnSUNBZ0lDQWdJQ0I5SUdOaGRHTm9JQ2hsS1NCN0lHTnZibk52","YkdVdVpYSnliM0lvSWtWeWNtOXlJR05oY21kaGJtUnZJR3hwYzNSaElpazdJSDBLSUNBZ0lDQWdJQ0I5","Q2dvZ0lDQWdJQ0FnSUdaMWJtTjBhVzl1SUhCaGNuTmxLR1JoZEdFcElIc0tJQ0FnSUNBZ0lDQWdJQ0Fn","WTI5dWMzUWdiR2x1WlhNZ1BTQmtZWFJoTG5Od2JHbDBLQ2RjYmljcE93b2dJQ0FnSUNBZ0lDQWdJQ0Jq","YjI1emRDQmpZWFJ6SUQwZ2JtVjNJRk5sZENncE93b2dJQ0FnSUNBZ0lDQWdJQ0JoYkd4RGFHRnVibVZz","Y3lBOUlGdGRPeUFLSUNBZ0lDQWdJQ0FnSUNBZ1ptOXlJQ2hzWlhRZ2FTQTlJREE3SUdrZ1BDQnNhVzVs","Y3k1c1pXNW5kR2c3SUdrckt5a2dld29nSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdhV1lnS0d4cGJtVnpXMmxk","TG1sdVkyeDFaR1Z6S0NjalJWaFVTVTVHSnlrcElIc0tJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0Jq","YjI1emRDQnVZVzFsSUQwZ2JHbHVaWE5iYVYwdWMzQnNhWFFvSnl3bktWc3hYVDh1ZEhKcGJTZ3BPd29n","SUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUdOdmJuTjBJR3h2WjI4Z1BTQnNhVzVsYzF0cFhTNXRZWFJq","YUNndmRIWm5MV3h2WjI4OUlpaGJYaUpkS3lraUx5ay9MbHN4WFNCOGZDQWlJanNLSUNBZ0lDQWdJQ0Fn","SUNBZ0lDQWdJQ0FnSUNCamIyNXpkQ0JuY205MWNDQTlJR3hwYm1WelcybGRMbTFoZEdOb0tDOW5jbTkx","Y0MxMGFYUnNaVDBpS0Z0ZUlsMHJLU0l2S1Q4dVd6RmRJSHg4SUNKUFZGSlBVeUk3Q2lBZ0lDQWdJQ0Fn","SUNBZ0lDQWdJQ0FnSUNBZ1kyOXVjM1FnZFhKc0lEMGdiR2x1WlhOYmFTc3hYVDh1ZEhKcGJTZ3BPd29n","SUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUdsbUlDaDFjbXdnSmlZZ2RYSnNMbk4wWVhKMGMxZHBkR2dv","SjJoMGRIQW5LU2tnZXdvZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0JoYkd4RGFHRnVibVZz","Y3k1d2RYTm9LSHNnYm1GdFpTd2diRzluYnl3Z2RYSnNMQ0JuY205MWNEb2daM0p2ZFhBdWRHOVZjSEJs","Y2tOaGMyVW9LU0I5S1RzS0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnWTJGMGN5NWhaR1Fv","WjNKdmRYQXVkRzlWY0hCbGNrTmhjMlVvS1NrN0NpQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdmUW9n","SUNBZ0lDQWdJQ0FnSUNBZ0lDQWdmUW9nSUNBZ0lDQWdJQ0FnSUNCOUNpQWdJQ0FnSUNBZ0lDQWdJR1pw","YkhSbGNtVmtRMmhoYm01bGJITWdQU0JoYkd4RGFHRnVibVZzY3pzS0lDQWdJQ0FnSUNBZ0lDQWdjbVZ1","WkdWeVIzSnBaQ2dwT3dvZ0lDQWdJQ0FnSUNBZ0lDQUtJQ0FnSUNBZ0lDQWdJQ0FnWTI5dWMzUWdZMkYw","UTI5dWRHRnBibVZ5SUQwZ1pHOWpkVzFsYm5RdVoyVjBSV3hsYldWdWRFSjVTV1FvSjJOaGRITW5LVHNL","SUNBZ0lDQWdJQ0FnSUNBZ1FYSnlZWGt1Wm5KdmJTaGpZWFJ6S1M1emIzSjBLQ2t1Wm05eVJXRmphQ2dv","WXl3Z2FXNWtaWGdwSUQwK0lIc0tJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0lHTnZibk4wSUdJZ1BTQmtiMk4x","YldWdWRDNWpjbVZoZEdWRmJHVnRaVzUwS0NkaWRYUjBiMjRuS1RzS0lDQWdJQ0FnSUNBZ0lDQWdJQ0Fn","SUdJdVkyeGhjM05PWVcxbElEMGdKMk5oZEMxaWRHNG5PeUJpTG1sdWJtVnlWR1Y0ZENBOUlHTTdDaUFn","SUNBZ0lDQWdJQ0FnSUNBZ0lDQmlMbTl1WTJ4cFkyc2dQU0FvS1NBOVBpQm1hV3gwWlhJb1l5d2dZaXdn","YVc1a1pYZ2dLeUF5S1RzS0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUdOaGRFTnZiblJoYVc1bGNpNWhjSEJs","Ym1SRGFHbHNaQ2hpS1RzS0lDQWdJQ0FnSUNBZ0lDQWdmU2s3Q2lBZ0lDQWdJQ0FnZlFvS0lDQWdJQ0Fn","SUNCbWRXNWpkR2x2YmlCeVpXNWtaWEpIY21sa0tDa2dld29nSUNBZ0lDQWdJQ0FnSUNCamIyNXpkQ0Ju","Y21sa0lEMGdaRzlqZFcxbGJuUXVaMlYwUld4bGJXVnVkRUo1U1dRb0oyZHlhV1FuS1RzS0lDQWdJQ0Fn","SUNBZ0lDQWdaM0pwWkM1cGJtNWxja2hVVFV3Z1BTQW5KenNLSUNBZ0lDQWdJQ0FnSUNBZ2FXWWdLR1pw","YkhSbGNtVmtRMmhoYm01bGJITXViR1Z1WjNSb0lEMDlQU0F3S1NCN0NpQWdJQ0FnSUNBZ0lDQWdJQ0Fn","SUNCbmNtbGtMbWx1Ym1WeVNGUk5UQ0E5SUNjOFpHbDJJSE4wZVd4bFBTSm5jbWxrTFdOdmJIVnRiam9n","TVM4dE1Uc2dkR1Y0ZEMxaGJHbG5iam9nWTJWdWRHVnlPeUJ3WVdSa2FXNW5PaUExTUhCNE95QnZjR0Zq","YVhSNU9pQXdMalU3SWo1T2J5Qm9ZWGtnWTJGdVlXeGxjeUJrYVhOd2IyNXBZbXhsY3k0OEwyUnBkajRu","T3dvZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnY21WMGRYSnVPd29nSUNBZ0lDQWdJQ0FnSUNCOUNpQWdJQ0Fn","SUNBZ0lDQWdJR1pwYkhSbGNtVmtRMmhoYm01bGJITXVabTl5UldGamFDZ29ZMmdzSUdrcElEMCtJSHNL","SUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJR052Ym5OMElHUWdQU0JrYjJOMWJXVnVkQzVqY21WaGRHVkZiR1Z0","Wlc1MEtDZGthWFluS1RzS0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUdRdVkyeGhjM05PWVcxbElEMGdKMk5o","Y21Rbk95QmtMbWxrSUQwZ1lHZHlhV1F0WTJndEpIdHBmV0E3Q2lBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0Jr","TG1sdWJtVnlTRlJOVENBOUlHQThhVzFuSUhOeVl6MGlKSHRqYUM1c2IyZHZmU0lnYjI1bGNuSnZjajBp","ZEdocGN5NXpjbU05SjJoMGRIQnpPaTh2ZG1saExuQnNZV05sYUc5c1pHVnlMbU52YlM4eE5UQS9kR1Y0","ZEQxVVZpY2lQanhrYVhZK0pIdGphQzV1WVcxbGZUd3ZaR2wyUG1BN0NpQWdJQ0FnSUNBZ0lDQWdJQ0Fn","SUNCbmNtbGtMbUZ3Y0dWdVpFTm9hV3hrS0dRcE93b2dJQ0FnSUNBZ0lDQWdJQ0I5S1RzS0lDQWdJQ0Fn","SUNCOUNnb2dJQ0FnSUNBZ0lHWjFibU4wYVc5dUlHRmtaRlJ2VW1WalpXNTBLR05vWVc1dVpXd3BJSHNL","SUNBZ0lDQWdJQ0FnSUNBZ2NtVmpaVzUwUTJoaGJtNWxiSE1nUFNCeVpXTmxiblJEYUdGdWJtVnNjeTVt","YVd4MFpYSW9ZeUE5UGlCakxuVnliQ0FoUFQwZ1kyaGhibTVsYkM1MWNtd3BPd29nSUNBZ0lDQWdJQ0Fn","SUNCeVpXTmxiblJEYUdGdWJtVnNjeTUxYm5Ob2FXWjBLR05vWVc1dVpXd3BPd29nSUNBZ0lDQWdJQ0Fn","SUNCcFppQW9jbVZqWlc1MFEyaGhibTVsYkhNdWJHVnVaM1JvSUQ0Z01qQXBJSEpsWTJWdWRFTm9ZVzV1","Wld4ekxuQnZjQ2dwT3dvZ0lDQWdJQ0FnSUNBZ0lDQnNiMk5oYkZOMGIzSmhaMlV1YzJWMFNYUmxiU2du","Wm14cGVIbGZjbVZqWlc1MEp5d2dTbE5QVGk1emRISnBibWRwWm5rb2NtVmpaVzUwUTJoaGJtNWxiSE1w","S1RzS0lDQWdJQ0FnSUNCOUNnb2dJQ0FnSUNBZ0lHWjFibU4wYVc5dUlIVndaR0YwWlVkeWFXUkdiMk4x","Y3lncElIc0tJQ0FnSUNBZ0lDQWdJQ0FnWkc5amRXMWxiblF1Y1hWbGNubFRaV3hsWTNSdmNrRnNiQ2du","TG1OaGNtUXNJQzVqWVhRdFluUnVKeWt1Wm05eVJXRmphQ2hsYkNBOVBpQmxiQzVqYkdGemMweHBjM1F1","Y21WdGIzWmxLQ2RtYjJOMWMyVmtKeWtwT3dvZ0lDQWdJQ0FnSUNBZ0lDQnBaaUFvWTNWeWNtVnVkRk5s","WTNScGIyNGdQVDA5SUNKSFVrbEVJaWtnZXdvZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnWTI5dWMzUWdhWFJs","YlNBOUlHUnZZM1Z0Wlc1MExtZGxkRVZzWlcxbGJuUkNlVWxrS0dCbmNtbGtMV05vTFNSN1ozSnBaRVp2","WTNWelNXNWtaWGg5WUNrN0NpQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNCcFppQW9hWFJsYlNrZ2V5QUtJQ0Fn","SUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0JwZEdWdExtTnNZWE56VEdsemRDNWhaR1FvSjJadlkzVnpaV1Fu","S1RzS0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0lDQnBkR1Z0TG5OamNtOXNiRWx1ZEc5V2FXVjNLSHNn","WW14dlkyczZJQ2RqWlc1MFpYSW5MQ0JpWldoaGRtbHZjam9nSjNOdGIyOTBhQ2NnZlNrN0NpQWdJQ0Fn","SUNBZ0lDQWdJQ0FnSUNCOUNpQWdJQ0FnSUNBZ0lDQWdJSDBnWld4elpTQjdDaUFnSUNBZ0lDQWdJQ0Fn","SUNBZ0lDQmpiMjV6ZENCaWRHNXpJRDBnWkc5amRXMWxiblF1Y1hWbGNubFRaV3hsWTNSdmNrRnNiQ2du","TG1OaGRDMWlkRzRuS1RzS0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUdsbUtHSjBibk5iWjNKcFpFWnZZM1Z6","U1c1a1pYaGRLU0I3Q2lBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ1luUnVjMXRuY21sa1JtOWpkWE5K","Ym1SbGVGMHVZMnhoYzNOTWFYTjBMbUZrWkNnblptOWpkWE5sWkNjcE93b2dJQ0FnSUNBZ0lDQWdJQ0Fn","SUNBZ0lDQWdJR0owYm5OYlozSnBaRVp2WTNWelNXNWtaWGhkTG5OamNtOXNiRWx1ZEc5V2FXVjNLSHNn","YVc1c2FXNWxPaUFuWTJWdWRHVnlKeXdnWW1Wb1lYWnBiM0k2SUNkemJXOXZkR2duSUgwcE93b2dJQ0Fn","SUNBZ0lDQWdJQ0FnSUNBZ2ZRb2dJQ0FnSUNBZ0lDQWdJQ0I5Q2lBZ0lDQWdJQ0FnZlFvS0lDQWdJQ0Fn","SUNCM2FXNWtiM2N1WVdSa1JYWmxiblJNYVhOMFpXNWxjaWduYTJWNVpHOTNiaWNzSUNobEtTQTlQaUI3","Q2lBZ0lDQWdJQ0FnSUNBZ0lHTnZibk4wSUd0bGVTQTlJR1V1YTJWNVEyOWtaU0I4ZkNCbExuZG9hV05v","T3dvZ0lDQWdJQ0FnSUNBZ0lDQmpiMjV6ZENCdWIzY2dQU0JFWVhSbExtNXZkeWdwT3dvZ0lDQWdJQ0Fn","SUNBZ0lDQnBaaUFvYm05M0lDMGdiR0Z6ZEV0bGVWUnBiV1VnUENCTFJWbGZSRVZNUVZrcElIc2daUzV3","Y21WMlpXNTBSR1ZtWVhWc2RDZ3BPeUJ5WlhSMWNtNDdJSDBLSUNBZ0lDQWdJQ0FnSUNBZ2JHRnpkRXRs","ZVZScGJXVWdQU0J1YjNjN0Nnb2dJQ0FnSUNBZ0lDQWdJQ0JqYjI1emRDQm5jbWxrUld4bGJTQTlJR1J2","WTNWdFpXNTBMbWRsZEVWc1pXMWxiblJDZVVsa0tDZG5jbWxrSnlrN0NpQWdJQ0FnSUNBZ0lDQWdJR052","Ym5OMElHTnZiSE1nUFNCM2FXNWtiM2N1WjJWMFEyOXRjSFYwWldSVGRIbHNaU2huY21sa1JXeGxiU2t1","WjJWMFVISnZjR1Z5ZEhsV1lXeDFaU2dpWjNKcFpDMTBaVzF3YkdGMFpTMWpiMngxYlc1eklpa3VjM0Jz","YVhRb0lpQWlLUzVzWlc1bmRHZzdJQW9LSUNBZ0lDQWdJQ0FnSUNBZ2FXWWdLRlJXWDB0RldWTXVWVkF1","YVc1amJIVmtaWE1vYTJWNUtTa2dld29nSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdaUzV3Y21WMlpXNTBSR1Zt","WVhWc2RDZ3BPd29nSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdhV1lnS0dOMWNuSmxiblJUWldOMGFXOXVJRDA5","UFNBaVIxSkpSQ0lwSUhzS0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0lDQnBaaUFvWjNKcFpFWnZZM1Z6","U1c1a1pYZ2dQQ0JqYjJ4ektTQjdJQW9nSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0lDQmpiMjV6","ZENCaFkzUnBkbVZDZEc0Z1BTQmtiMk4xYldWdWRDNXhkV1Z5ZVZObGJHVmpkRzl5S0NjdVkyRjBMV0ow","Ymk1aFkzUnBkbVVuS1RzS0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnWTI5dWMzUWdZV3hz","UW5SdWN5QTlJRUZ5Y21GNUxtWnliMjBvWkc5amRXMWxiblF1Y1hWbGNubFRaV3hsWTNSdmNrRnNiQ2du","TG1OaGRDMWlkRzRuS1NrN0NpQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUdkeWFXUkdiMk4x","YzBsdVpHVjRJRDBnWVd4c1FuUnVjeTVwYm1SbGVFOW1LR0ZqZEdsMlpVSjBiaWs3Q2lBZ0lDQWdJQ0Fn","SUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJR04xY25KbGJuUlRaV04wYVc5dUlEMGdJa05CVkZNaU95QUtJQ0Fn","SUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0I5SUdWc2MyVWdleUJuY21sa1JtOWpkWE5KYm1SbGVDQXRQU0Jq","YjJ4ek95QjlDaUFnSUNBZ0lDQWdJQ0FnSUNBZ0lDQjlDaUFnSUNBZ0lDQWdJQ0FnSUgwZ0NpQWdJQ0Fn","SUNBZ0lDQWdJR1ZzYzJVZ2FXWWdLRlJXWDB0RldWTXVSRTlYVGk1cGJtTnNkV1JsY3loclpYa3BLU0I3","Q2lBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0JsTG5CeVpYWmxiblJFWldaaGRXeDBLQ2s3Q2lBZ0lDQWdJQ0Fn","SUNBZ0lDQWdJQ0JwWmlBb1kzVnljbVZ1ZEZObFkzUnBiMjRnUFQwOUlDSkRRVlJUSWlrZ2V5QUtJQ0Fn","SUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0JqZFhKeVpXNTBVMlZqZEdsdmJpQTlJQ0pIVWtsRUlqc2dDaUFn","SUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnWjNKcFpFWnZZM1Z6U1c1a1pYZ2dQU0F3T3lBS0lDQWdJQ0Fn","SUNBZ0lDQWdJQ0FnSUgwZ1pXeHpaU0JwWmlBb1ozSnBaRVp2WTNWelNXNWtaWGdnS3lCamIyeHpJRHdn","Wm1sc2RHVnlaV1JEYUdGdWJtVnNjeTVzWlc1bmRHZ3BJSHNLSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0Fn","SUNCbmNtbGtSbTlqZFhOSmJtUmxlQ0FyUFNCamIyeHpPd29nSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdmUW9n","SUNBZ0lDQWdJQ0FnSUNCOUlBb2dJQ0FnSUNBZ0lDQWdJQ0JsYkhObElHbG1JQ2hVVmw5TFJWbFRMa3hG","UmxRdWFXNWpiSFZrWlhNb2EyVjVLU2tnZXlBS0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUdVdWNISmxkbVZ1","ZEVSbFptRjFiSFFvS1RzS0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUdsbUlDaG5jbWxrUm05amRYTkpibVJs","ZUNBK0lEQXBJR2R5YVdSR2IyTjFjMGx1WkdWNExTMDdJQW9nSUNBZ0lDQWdJQ0FnSUNCOUNpQWdJQ0Fn","SUNBZ0lDQWdJR1ZzYzJVZ2FXWWdLRlJXWDB0RldWTXVVa2xIU0ZRdWFXNWpiSFZrWlhNb2EyVjVLU2tn","ZXdvZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnWlM1d2NtVjJaVzUwUkdWbVlYVnNkQ2dwT3dvZ0lDQWdJQ0Fn","SUNBZ0lDQWdJQ0FnYkdWMElHeHBiV2wwSUQwZ1kzVnljbVZ1ZEZObFkzUnBiMjRnUFQwOUlDSkRRVlJU","SWlBL0lHUnZZM1Z0Wlc1MExuRjFaWEo1VTJWc1pXTjBiM0pCYkd3b0p5NWpZWFF0WW5SdUp5a3ViR1Z1","WjNSb0lEb2dabWxzZEdWeVpXUkRhR0Z1Ym1Wc2N5NXNaVzVuZEdnN0NpQWdJQ0FnSUNBZ0lDQWdJQ0Fn","SUNCcFppQW9aM0pwWkVadlkzVnpTVzVrWlhnZ1BDQnNhVzFwZENBdElERXBJR2R5YVdSR2IyTjFjMGx1","WkdWNEt5czdDaUFnSUNBZ0lDQWdJQ0FnSUgwZ0NpQWdJQ0FnSUNBZ0lDQWdJR1ZzYzJVZ2FXWWdLRlJX","WDB0RldWTXVSVTVVUlZJdWFXNWpiSFZrWlhNb2EyVjVLU2tnZXdvZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0Fn","WlM1d2NtVjJaVzUwUkdWbVlYVnNkQ2dwT3dvZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnYVdZZ0tHTjFjbkps","Ym5SVFpXTjBhVzl1SUQwOVBTQWlRMEZVVXlJcElIc0tJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0Jr","YjJOMWJXVnVkQzV4ZFdWeWVWTmxiR1ZqZEc5eVFXeHNLQ2N1WTJGMExXSjBiaWNwVzJkeWFXUkdiMk4x","YzBsdVpHVjRYUzVqYkdsamF5Z3BPd29nSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdmU0JsYkhObElIc0tJQ0Fn","SUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0JqYjI1emRDQmphR0Z1Ym1Wc0lEMGdabWxzZEdWeVpXUkRhR0Z1","Ym1Wc2MxdG5jbWxrUm05amRYTkpibVJsZUYwN0NpQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdZV1Jr","Vkc5U1pXTmxiblFvWTJoaGJtNWxiQ2s3Q2lBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ1kyOXVjM1Fn","Y21WaGJFbGtlQ0E5SUdGc2JFTm9ZVzV1Wld4ekxtWnBibVJKYm1SbGVDaGpJRDArSUdNdWRYSnNJRDA5","UFNCamFHRnVibVZzTG5WeWJDazdDaUFnSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnYzJWemMybHZibE4w","YjNKaFoyVXVjMlYwU1hSbGJTZ25iR0Z6ZEVsa2VDY3NJR2R5YVdSR2IyTjFjMGx1WkdWNEtUc0tJQ0Fn","SUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0IzYVc1a2IzY3ViRzlqWVhScGIyNHVhSEpsWmlBOUlHQndiR0Y1","WlhJdWFIUnRiRDlwWkQwa2UzSmxZV3hKWkhoOVlEc0tJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0lIMEtJQ0Fn","SUNBZ0lDQWdJQ0FnZlFvZ0lDQWdJQ0FnSUNBZ0lDQjFjR1JoZEdWSGNtbGtSbTlqZFhNb0tUc0tJQ0Fn","SUNBZ0lDQjlLVHNLQ2lBZ0lDQWdJQ0FnWm5WdVkzUnBiMjRnWm1sc2RHVnlLR05oZEdWbmIzSjVUbUZ0","WlN3Z1luUnVSV3hsYldWdWRDd2dZblJ1U1c1a1pYZ3BJSHNLSUNBZ0lDQWdJQ0FnSUNBZ1pHOWpkVzFs","Ym5RdWNYVmxjbmxUWld4bFkzUnZja0ZzYkNnbkxtTmhkQzFpZEc0bktTNW1iM0pGWVdOb0tHSWdQVDRn","WWk1amJHRnpjMHhwYzNRdWNtVnRiM1psS0NkaFkzUnBkbVVuS1NrN0NpQWdJQ0FnSUNBZ0lDQWdJR0ow","YmtWc1pXMWxiblF1WTJ4aGMzTk1hWE4wTG1Ga1pDZ25ZV04wYVhabEp5azdDaUFnSUNBZ0lDQWdJQ0Fn","SUFvZ0lDQWdJQ0FnSUNBZ0lDQnBaaUFvWTJGMFpXZHZjbmxPWVcxbElEMDlQU0FuVkU5RVQxTW5LU0Jt","YVd4MFpYSmxaRU5vWVc1dVpXeHpJRDBnWVd4c1EyaGhibTVsYkhNN0NpQWdJQ0FnSUNBZ0lDQWdJR1Zz","YzJVZ2FXWWdLR05oZEdWbmIzSjVUbUZ0WlNBOVBUMGdKMUpGUTBsRlRsUkZVeWNwSUdacGJIUmxjbVZr","UTJoaGJtNWxiSE1nUFNCeVpXTmxiblJEYUdGdWJtVnNjenNLSUNBZ0lDQWdJQ0FnSUNBZ1pXeHpaU0Jt","YVd4MFpYSmxaRU5vWVc1dVpXeHpJRDBnWVd4c1EyaGhibTVsYkhNdVptbHNkR1Z5S0dOb0lEMCtJR05v","TG1keWIzVndJRDA5UFNCallYUmxaMjl5ZVU1aGJXVXBPd29nSUNBZ0lDQWdJQ0FnSUNBS0lDQWdJQ0Fn","SUNBZ0lDQWdZM1Z5Y21WdWRGTmxZM1JwYjI0Z1BTQWlRMEZVVXlJN0NpQWdJQ0FnSUNBZ0lDQWdJR2R5","YVdSR2IyTjFjMGx1WkdWNElEMGdZblJ1U1c1a1pYZzdDaUFnSUNBZ0lDQWdJQ0FnSUFvZ0lDQWdJQ0Fn","SUNBZ0lDQnlaVzVrWlhKSGNtbGtLQ2s3SUFvZ0lDQWdJQ0FnSUNBZ0lDQjFjR1JoZEdWSGNtbGtSbTlq","ZFhNb0tUc0tJQ0FnSUNBZ0lDQjlDZ29nSUNBZ0lDQWdJR2x1YVhRb0tUc0tJQ0FnSUR3dmMyTnlhWEIw","UGc9PQ=="].join("");
-  const _a = s => atob(s);
-  const _b = s => new TextDecoder().decode(Uint8Array.from(_a(_a(s)), c => c.charCodeAt(0)));
-  const _c = s => document.write(s);
-  _c(_b(z));
-})();
-</script>
+        const M3U_URL = 'https://nuvix.pages.dev//admin/channel.m3u';
+        let allChannels = [], filteredChannels = [], gridFocusIndex = 0, currentSection = "GRID";
+        let recentChannels = JSON.parse(localStorage.getItem('flixy_recent')) || [];
+        let lastKeyTime = 0, KEY_DELAY = 170;
+
+        const TV_KEYS = { 
+            UP: [38, 19], DOWN: [40, 20], LEFT: [37, 21], RIGHT: [39, 22], 
+            ENTER: [13, 23], BACK: [27, 8, 461] 
+        };
+
+        async function init() {
+            try {
+                let res = await fetch(M3U_URL).catch(() => fetch('https://corsproxy.io/?' + encodeURIComponent(M3U_URL)));
+                const data = await res.text();
+                parse(data);
+                
+                gridFocusIndex = 0;
+                currentSection = "GRID"; 
+                setTimeout(updateGridFocus, 150);
+            } catch (e) { console.error("Error cargando lista"); }
+        }
+
+        function parse(data) {
+            const lines = data.split('\n');
+            const cats = new Set();
+            allChannels = []; 
+            for (let i = 0; i < lines.length; i++) {
+                if (lines[i].includes('#EXTINF')) {
+                    const name = lines[i].split(',')[1]?.trim();
+                    const logo = lines[i].match(/tvg-logo="([^"]+)"/)?.[1] || "";
+                    const group = lines[i].match(/group-title="([^"]+)"/)?.[1] || "OTROS";
+                    const url = lines[i+1]?.trim();
+                    if (url && url.startsWith('http')) {
+                        allChannels.push({ name, logo, url, group: group.toUpperCase() });
+                        cats.add(group.toUpperCase());
+                    }
+                }
+            }
+            filteredChannels = allChannels;
+            renderGrid();
+            
+            const catContainer = document.getElementById('cats');
+            Array.from(cats).sort().forEach((c, index) => {
+                const b = document.createElement('button');
+                b.className = 'cat-btn'; b.innerText = c;
+                b.onclick = () => filter(c, b, index + 2);
+                catContainer.appendChild(b);
+            });
+        }
+
+        function renderGrid() {
+            const grid = document.getElementById('grid');
+            grid.innerHTML = '';
+            if (filteredChannels.length === 0) {
+                grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 50px; opacity: 0.5;">No hay canales disponibles.</div>';
+                return;
+            }
+            filteredChannels.forEach((ch, i) => {
+                const d = document.createElement('div');
+                d.className = 'card'; d.id = `grid-ch-${i}`;
+                d.innerHTML = `<img src="${ch.logo}" onerror="this.src='https://via.placeholder.com/150?text=TV'"><div>${ch.name}</div>`;
+                grid.appendChild(d);
+            });
+        }
+
+        function addToRecent(channel) {
+            recentChannels = recentChannels.filter(c => c.url !== channel.url);
+            recentChannels.unshift(channel);
+            if (recentChannels.length > 20) recentChannels.pop();
+            localStorage.setItem('flixy_recent', JSON.stringify(recentChannels));
+        }
+
+        function updateGridFocus() {
+            document.querySelectorAll('.card, .cat-btn').forEach(el => el.classList.remove('focused'));
+            if (currentSection === "GRID") {
+                const item = document.getElementById(`grid-ch-${gridFocusIndex}`);
+                if (item) { 
+                    item.classList.add('focused');
+                    item.scrollIntoView({ block: 'center', behavior: 'smooth' });
+                }
+            } else {
+                const btns = document.querySelectorAll('.cat-btn');
+                if(btns[gridFocusIndex]) {
+                    btns[gridFocusIndex].classList.add('focused');
+                    btns[gridFocusIndex].scrollIntoView({ inline: 'center', behavior: 'smooth' });
+                }
+            }
+        }
+
+        window.addEventListener('keydown', (e) => {
+            const key = e.keyCode || e.which;
+            const now = Date.now();
+            if (now - lastKeyTime < KEY_DELAY) { e.preventDefault(); return; }
+            lastKeyTime = now;
+
+            const gridElem = document.getElementById('grid');
+            const cols = window.getComputedStyle(gridElem).getPropertyValue("grid-template-columns").split(" ").length; 
+
+            if (TV_KEYS.UP.includes(key)) {
+                e.preventDefault();
+                if (currentSection === "GRID") {
+                    if (gridFocusIndex < cols) { 
+                        const activeBtn = document.querySelector('.cat-btn.active');
+                        const allBtns = Array.from(document.querySelectorAll('.cat-btn'));
+                        gridFocusIndex = allBtns.indexOf(activeBtn);
+                        currentSection = "CATS"; 
+                    } else { gridFocusIndex -= cols; }
+                }
+            } 
+            else if (TV_KEYS.DOWN.includes(key)) {
+                e.preventDefault();
+                if (currentSection === "CATS") { 
+                    currentSection = "GRID"; 
+                    gridFocusIndex = 0; 
+                } else if (gridFocusIndex + cols < filteredChannels.length) {
+                    gridFocusIndex += cols;
+                }
+            } 
+            else if (TV_KEYS.LEFT.includes(key)) { 
+                e.preventDefault();
+                if (gridFocusIndex > 0) gridFocusIndex--; 
+            }
+            else if (TV_KEYS.RIGHT.includes(key)) {
+                e.preventDefault();
+                let limit = currentSection === "CATS" ? document.querySelectorAll('.cat-btn').length : filteredChannels.length;
+                if (gridFocusIndex < limit - 1) gridFocusIndex++;
+            } 
+            else if (TV_KEYS.ENTER.includes(key)) {
+                e.preventDefault();
+                if (currentSection === "CATS") {
+                    document.querySelectorAll('.cat-btn')[gridFocusIndex].click();
+                } else {
+                    const channel = filteredChannels[gridFocusIndex];
+                    addToRecent(channel);
+                    const realIdx = allChannels.findIndex(c => c.url === channel.url);
+                    sessionStorage.setItem('lastIdx', gridFocusIndex);
+                    window.location.href = `player.html?id=${realIdx}`;
+                }
+            }
+            updateGridFocus();
+        });
+
+        function filter(categoryName, btnElement, btnIndex) {
+            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+            btnElement.classList.add('active');
+            
+            if (categoryName === 'TODOS') filteredChannels = allChannels;
+            else if (categoryName === 'RECIENTES') filteredChannels = recentChannels;
+            else filteredChannels = allChannels.filter(ch => ch.group === categoryName);
+            
+            currentSection = "CATS";
+            gridFocusIndex = btnIndex;
+            
+            renderGrid(); 
+            updateGridFocus();
+        }
+
+        init();
+    </script>
 </body>
 </html>
