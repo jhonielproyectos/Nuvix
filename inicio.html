@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLIXY RD - Player</title>
+    <style>
+        :root {
+            --azul-brillante: #0070f3;
+            --fondo: #050505;
+            --gris-navbar: rgba(18, 18, 18, 0.95);
+            --rojo-error: #ff4d4d;
+        }
+
+        /* Configuración para que el cuerpo no tenga scroll propio */
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            overflow: hidden; 
+            font-family: 'Inter', sans-serif;
+            background-color: var(--fondo);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navbar Moderno */
+        .navbar {
+            background: var(--gris-navbar);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 0 25px;
+            height: 65px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            flex-shrink: 0; /* Evita que el menú se encoja */
+            z-index: 100;
+        }
+
+        .logo-img {
+            height: 35px;
+            width: auto;
+        }
+
+        .right-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-box {
+            text-align: right;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            padding-right: 15px;
+        }
+
+        .user-name {
+            display: block;
+            color: white;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .days-badge {
+            font-size: 9px;
+            color: var(--azul-brillante);
+            background: rgba(0, 112, 243, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .logout-btn {
+            background: transparent;
+            border: 1px solid var(--rojo-error);
+            color: var(--rojo-error);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: var(--rojo-error);
+            color: white;
+        }
+
+        /* Contenedor del Iframe (Contenido Principal) */
+        .content-container {
+            flex-grow: 1; /* Toma todo el espacio sobrante */
+            width: 100%;
+            border: none;
+            position: relative;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo-container">
+            <img src="https://flixy-rd.pages.dev/img/img.jpg" alt="Logo" class="logo-img">
+        </div>
+        
+        <div class="right-section">
+            <div class="user-box">
+                <span class="user-name" id="display-user">Usuario</span>
+                <span class="days-badge" id="display-days">...</span>
+            </div>
+            <button class="logout-btn" onclick="logout()">Salir</button>
+        </div>
+    </nav>
+
+    <div class="content-container">
+        <iframe src="user/tv.html" title="TV Content" allowfullscreen></iframe>
+    </div>
+
+    <script>
+(function(){
+  const z = ["UEhOamNtbHdkRDRLSUNBZ0lDQWdJQ0JtZFc1amRHbHZiaUJzYjJkdmRYUW9LU0I3Q2lBZ0lDQWdJQ0Fn","SUNBZ0lHeHZZMkZzVTNSdmNtRm5aUzVqYkdWaGNpZ3BPd29nSUNBZ0lDQWdJQ0FnSUNCM2FXNWtiM2N1","Ykc5allYUnBiMjR1YUhKbFppQTlJQ2RwYm1SbGVDNW9kRzFzSnpzS0lDQWdJQ0FnSUNCOUNnb2dJQ0Fn","SUNBZ0lIZHBibVJ2ZHk1dmJteHZZV1FnUFNCbWRXNWpkR2x2YmlncElIc0tJQ0FnSUNBZ0lDQWdJQ0Fn","WTI5dWMzUWdkWE5sY2lBOUlHeHZZMkZzVTNSdmNtRm5aUzVuWlhSSmRHVnRLQ2QxYzNWaGNtbHZSbXhw","ZUhrbktUc0tJQ0FnSUNBZ0lDQWdJQ0FnWTI5dWMzUWdaWGh3YVhKaElEMGdiRzlqWVd4VGRHOXlZV2Rs","TG1kbGRFbDBaVzBvSjJWNGNHbHlZVVpzYVhoNUp5azdDZ29nSUNBZ0lDQWdJQ0FnSUNCcFppQW9JWFZ6","WlhJcElIc0tJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0lIZHBibVJ2ZHk1c2IyTmhkR2x2Ymk1b2NtVm1JRDBn","SjJsdVpHVjRMbWgwYld3bk93b2dJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ2NtVjBkWEp1T3dvZ0lDQWdJQ0Fn","SUNBZ0lDQjlDZ29nSUNBZ0lDQWdJQ0FnSUNCa2IyTjFiV1Z1ZEM1blpYUkZiR1Z0Wlc1MFFubEpaQ2du","WkdsemNHeGhlUzExYzJWeUp5a3VhVzV1WlhKVVpYaDBJRDBnZFhObGNpNTBiMVZ3Y0dWeVEyRnpaU2dw","T3dvS0lDQWdJQ0FnSUNBZ0lDQWdZMjl1YzNRZ1ptVmphR0ZGZUhBZ1BTQnVaWGNnUkdGMFpTaGxlSEJw","Y21FcE93b2dJQ0FnSUNBZ0lDQWdJQ0JqYjI1emRDQm9iM2tnUFNCdVpYY2dSR0YwWlNncE93b2dJQ0Fn","SUNBZ0lDQWdJQ0JqYjI1emRDQmthV1psY21WdVkybGhUWE1nUFNCbVpXTm9ZVVY0Y0NBdElHaHZlVHNL","SUNBZ0lDQWdJQ0FnSUNBZ1kyOXVjM1FnWkdsaGMxSmxjM1JoYm5SbGN5QTlJRTFoZEdndVkyVnBiQ2hr","YVdabGNtVnVZMmxoVFhNZ0x5QW9NVEF3TUNBcUlEWXdJQ29nTmpBZ0tpQXlOQ2twT3dvS0lDQWdJQ0Fn","SUNBZ0lDQWdZMjl1YzNRZ1pHbHpjR3hoZVVSaGVYTWdQU0JrYjJOMWJXVnVkQzVuWlhSRmJHVnRaVzUw","UW5sSlpDZ25aR2x6Y0d4aGVTMWtZWGx6SnlrN0NpQWdJQ0FnSUNBZ0lDQWdJR2xtSUNoa2FXRnpVbVZ6","ZEdGdWRHVnpJRDRnTUNrZ2V3b2dJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ1pHbHpjR3hoZVVSaGVYTXVhVzV1","WlhKVVpYaDBJRDBnWUNSN1pHbGhjMUpsYzNSaGJuUmxjMzBnUk1PTlFWTmdPd29nSUNBZ0lDQWdJQ0Fn","SUNCOUlHVnNjMlVnZXdvZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnWkdsemNHeGhlVVJoZVhNdWFXNXVaWEpV","WlhoMElEMGdZRlpGVGtOSlJFOWdPd29nSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdaR2x6Y0d4aGVVUmhlWE11","YzNSNWJHVXVZMjlzYjNJZ1BTQW5JMlptTkdRMFpDYzdDaUFnSUNBZ0lDQWdJQ0FnSUgwS0lDQWdJQ0Fn","SUNCOU93b2dJQ0FnUEM5elkzSnBjSFEr"].join("");
+  const _a = s => atob(s);
+  const _b = s => new TextDecoder().decode(Uint8Array.from(_a(_a(s)), c => c.charCodeAt(0)));
+  const _c = s => document.write(s);
+  _c(_b(z));
+})();
+</script>
+</body>
+</html>
