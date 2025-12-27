@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flixy RD - Live TV</title>
+    <link href="https://vjs.zencdn.net/8.3.0/video-js.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        :root { 
+            --accent: #ff0000; 
+            --bg: #000000; 
+            --card: #121212; 
+            --header-bg: #000000;
+            --heart-red: #ff4b4b;
+            --playing-bg: rgba(255, 0, 0, 0.15);
+        }
+
+        body { 
+            background: var(--bg); 
+            color: white; 
+            font-family: 'Segoe UI', Roboto, sans-serif; 
+            margin: 0; 
+        }
+
+        .header-sticky {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: var(--header-bg);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.8);
+        }
+
+        .video-container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .video-js {
+            width: 100%;
+            aspect-ratio: 16/9;
+        }
+
+        .category-nav { 
+            display: flex; 
+            overflow-x: auto; 
+            background: #0f0f0f; 
+            padding: 8px 5px; 
+            gap: 5px; 
+            border-bottom: 1px solid #222;
+            scrollbar-width: none;
+        }
+        
+        .category-nav::-webkit-scrollbar { display: none; }
+
+        .cat-btn { 
+            background: #1a1a1a; 
+            color: #ccc; 
+            border: none; 
+            padding: 6px 12px; 
+            border-radius: 3px; 
+            cursor: pointer; 
+            white-space: nowrap; 
+            font-weight: bold;
+            font-size: 0.65rem; /* Fuente más pequeña */
+            text-transform: uppercase;
+        }
+
+        .cat-btn.active { background: var(--accent); color: #fff; }
+
+        .grid { 
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* FILA MÁS PEQUEÑA (Altura reducida de 75px a 50px) */
+        .card { 
+            display: flex;
+            align-items: center;
+            background: var(--card); 
+            height: 50px; 
+            border-bottom: 1px solid #1a1a1a;
+            cursor: pointer; 
+            transition: all 0.1s ease;
+            padding: 0 12px;
+        }
+
+        .card.playing {
+            background: var(--playing-bg);
+            border-left: 3px solid var(--accent);
+            padding-left: 9px;
+        }
+
+        .card.playing .program-name { color: #ff6666; }
+
+        .card:hover:not(.playing) { background: #1a1a1a; }
+
+        /* Número más pequeño */
+        .channel-number {
+            width: 30px;
+            font-weight: normal;
+            color: #555;
+            font-size: 0.75rem;
+            flex-shrink: 0;
+        }
+
+        /* Logo más pequeño */
+        .logo-wrap { 
+            width: 50px;
+            height: 35px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            background: #000; 
+            border-radius: 3px;
+            margin: 0 10px;
+            padding: 3px;
+            flex-shrink: 0;
+        }
+
+        .card img { max-width: 100%; max-height: 100%; object-fit: contain; }
+
+        .channel-info { flex-grow: 1; overflow: hidden; }
+
+        /* Nombre del canal más pequeño */
+        .program-name {
+            font-weight: 500;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Corazón más pequeño */
+        .fav-btn {
+            padding: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            color: #222;
+            transition: transform 0.2s, color 0.2s;
+        }
+
+        .fav-btn.active { color: var(--heart-red); }
+
+        .status { text-align: center; padding: 20px; color: var(--accent); font-size: 0.8rem; }
+
+        @media (max-width: 600px) {
+            .card { padding: 0 8px; height: 45px; }
+            .logo-wrap { width: 45px; margin: 0 8px; }
+            .channel-number { width: 25px; font-size: 0.7rem; }
+            .program-name { font-size: 0.85rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-sticky">
+        <div class="video-container">
+            <video id="tv-player" class="video-js vjs-big-play-centered" controls preload="auto" playsinline></video>
+        </div>
+
+        <div class="category-nav" id="cats">
+            <button class="cat-btn active" onclick="filter('TODOS', this)">TODOS</button>
+            <button class="cat-btn" onclick="filter('FAVORITOS', this)" style="color: var(--heart-red)">❤️</button>
+        </div>
+    </div>
+
+    <div id="status" class="status">Cargando...</div>
+    <div class="grid" id="grid"></div>
+
+    <script src="https://vjs.zencdn.net/8.3.0/video.min.js"></script>
+    <script>
+        const M3U_URL = 'https://nuvix.pages.dev/admin/channel.m3u';
+        const player = videojs('tv-player', { fluid: true });
+        let allChannels = [];
+        let favorites = JSON.parse(localStorage.getItem('flixy_favs')) || [];
+        let currentUrl = "";
+
+        async function init() {
+            try {
+                let response = await fetch(M3U_URL).catch(() => fetch('https://corsproxy.io/?' + encodeURIComponent(M3U_URL)));
+                const text = await response.text();
+                parse(text);
+                document.getElementById('status').style.display = 'none';
+            } catch (e) {
+                document.getElementById('status').innerText = "Error al conectar.";
+            }
+        }
+
+        function parse(data) {
+            const lines = data.split('\n');
+            const cats = new Set();
+            allChannels = [];
+            
+            for (let i = 0; i < lines.length; i++) {
+                if (lines[i].includes('#EXTINF')) {
+                    const info = lines[i];
+                    const url = lines[i+1]?.trim();
+                    if (url && url.startsWith('http')) {
+                        const group = info.match(/group-title="([^"]+)"/)?.[1] || "OTROS";
+                        const logo = info.match(/tvg-logo="([^"]+)"/)?.[1] || "";
+                        const name = info.split(',')[1]?.trim() || "Canal";
+                        
+                        allChannels.push({ id: btoa(name + url), name, logo, url, group: group.toUpperCase() });
+                        cats.add(group.toUpperCase());
+                    }
+                }
+            }
+            
+            const catContainer = document.getElementById('cats');
+            Array.from(cats).sort().forEach(c => {
+                const btn = document.createElement('button');
+                btn.className = 'cat-btn';
+                btn.innerText = c;
+                btn.onclick = (e) => filter(c, e.target);
+                catContainer.appendChild(btn);
+            });
+            render(allChannels);
+        }
+
+        function render(list) {
+            const grid = document.getElementById('grid');
+            grid.innerHTML = '';
+            
+            list.forEach((ch, index) => {
+                const isFav = favorites.includes(ch.id);
+                const isPlaying = ch.url === currentUrl;
+
+                const div = document.createElement('div');
+                div.className = `card ${isPlaying ? 'playing' : ''}`;
+                div.innerHTML = `
+                    <div class="channel-number">${index + 1}</div>
+                    <div class="logo-wrap">
+                        <img src="${ch.logo}" loading="lazy" onerror="this.src='https://via.placeholder.com/100x60?text=TV'">
+                    </div>
+                    <div class="channel-info">
+                        <div class="program-name">${ch.name}</div>
+                    </div>
+                    <div class="fav-btn ${isFav ? 'active fa-solid' : 'fa-regular'} fa-heart" 
+                         onclick="toggleFavorite(event, '${ch.id}')"></div>
+                `;
+                
+                div.onclick = () => {
+                    currentUrl = ch.url;
+                    document.querySelectorAll('.card').forEach(c => c.classList.remove('playing'));
+                    div.classList.add('playing');
+                    player.src({ src: ch.url, type: 'application/x-mpegURL' });
+                    player.play();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                };
+                grid.appendChild(div);
+            });
+        }
+
+        function toggleFavorite(e, channelId) {
+            e.stopPropagation();
+            const index = favorites.indexOf(channelId);
+            if (index > -1) favorites.splice(index, 1);
+            else favorites.push(channelId);
+            localStorage.setItem('flixy_favs', JSON.stringify(favorites));
+            
+            const activeBtn = document.querySelector('.cat-btn.active');
+            if(activeBtn && activeBtn.innerText.includes('FAVS') || activeBtn.innerHTML.includes('❤️')) {
+                render(allChannels.filter(ch => favorites.includes(ch.id)));
+            } else {
+                e.target.classList.toggle('active');
+                e.target.classList.toggle('fa-solid');
+                e.target.classList.toggle('fa-regular');
+            }
+        }
+
+        function filter(c, btn) {
+            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            if (c === 'FAVORITOS') {
+                render(allChannels.filter(ch => favorites.includes(ch.id)));
+            } else {
+                render(c === 'TODOS' ? allChannels : allChannels.filter(ch => ch.group === c));
+            }
+        }
+
+        init();
+    </script>
+</body>
+</html>
