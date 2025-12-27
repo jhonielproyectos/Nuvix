@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NUVIX</title>
+    <style>
+        :root {
+            --azul: #0070f3;
+            --rojo: #ff4d4d;
+            --fondo: #0a0a0a;
+            --gris-oscuro: #121212;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--fondo);
+            background-image: 
+                linear-gradient(135deg, rgba(0, 112, 243, 0.2) 0%, transparent 50%),
+                linear-gradient(225deg, rgba(255, 77, 77, 0.1) 0%, transparent 50%);
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 90%;
+            max-width: 380px;
+        }
+
+        .login-container {
+            width: 100%;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .logo {
+            font-size: 36px;
+            font-weight: 900;
+            margin-bottom: 5px;
+            letter-spacing: -1.5px;
+        }
+        .logo .blue { color: var(--azul); }
+        .logo .red { color: var(--rojo); }
+
+        .subtitle {
+            color: #eee;
+            font-size: 16px;
+            margin-bottom: 40px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-weight: 300;
+        }
+
+        .input-group { margin-bottom: 20px; }
+
+        .input-group input {
+            width: 100%; height: 55px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 14px; padding: 0 18px;
+            color: white; font-size: 16px; box-sizing: border-box;
+            outline: none; transition: all 0.3s ease;
+        }
+
+        .input-group input:focus { border-color: var(--azul); background: rgba(255, 255, 255, 0.15); }
+
+        .login-btn {
+            width: 100%; height: 55px; background: var(--azul);
+            color: white; border: none; border-radius: 14px;
+            font-size: 16px; font-weight: 700; margin-top: 10px;
+            cursor: pointer; transition: transform 0.2s;
+        }
+
+        .login-btn:disabled { background: #444; cursor: not-allowed; }
+
+        #status { margin-top: 25px; font-size: 14px; min-height: 20px; }
+
+        /* MODAL */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); display: none;
+            justify-content: center; align-items: center;
+            z-index: 1000; backdrop-filter: blur(8px);
+        }
+
+        .modal-content {
+            background: var(--gris-oscuro); width: 85%; max-width: 320px;
+            padding: 35px 25px; border-radius: 24px;
+            border: 1px solid rgba(255, 77, 77, 0.5);
+            text-align: center; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content h3 { color: var(--rojo); margin-top: 0; font-size: 22px; }
+        .modal-content p { color: #aaa; line-height: 1.6; font-size: 15px; margin-bottom: 25px; }
+
+        .modal-btn {
+            background: var(--rojo); color: white; border: none;
+            padding: 15px; border-radius: 12px; font-weight: 800;
+            cursor: pointer; width: 100%;
+        }
+
+        footer { width: 100%; padding: 30px 0; text-align: center; font-size: 12px; color: rgba(255,255,255,0.3); }
+        .err { color: var(--rojo); }
+        .ok { color: #00ff88; }
+        .load { color: var(--azul); animation: pulse 1s infinite; }
+        @keyframes pulse { 50% { opacity: 0.5; } }
+    </style>
+</head>
+<body>
+
+    <div class="main-content">
+        <div class="login-container">
+            <div class="logo">
+    <img src="img/img.png" alt="Logo de FLIXY RD" style="max-width: 50%; height: auto;">
+</div>
+
+            <div class="subtitle">Streaming Premium</div>
+            
+            <form id="loginForm">
+                <div class="input-group">
+                    <input type="text" id="user" placeholder="Usuario" required autocomplete="username">
+                </div>
+                <div class="input-group">
+                    <input type="password" id="pass" placeholder="Contraseña" required autocomplete="current-password">
+                </div>
+                <button type="submit" id="btn" class="login-btn">INGRESAR</button>
+            </form>
+            <div id="status"></div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modalAlert">
+        <div class="modal-content">
+            <h3 id="modalTitle">AVISO</h3>
+            <p id="modalText"></p>
+            <button class="modal-btn" onclick="cerrarModal()">ENTENDIDO</button>
+        </div>
+    </div>
+
+    <footer>
+        <div style="letter-spacing: 2px; text-transform: uppercase; font-weight: 600; color: rgba(255,255,255,0.5); margin-bottom: 4px;">by Gui Tech</div>
+        <div> © <span id="year"></span></div>
+    </footer>
+
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        function cerrarModal() {
+            document.getElementById('modalAlert').style.display = 'none';
+        }
+
+        function mostrarModal(titulo, mensaje) {
+            document.getElementById('modalTitle').innerText = titulo;
+            document.getElementById('modalText').innerHTML = mensaje;
+            document.getElementById('modalAlert').style.display = 'flex';
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const u = document.getElementById('user').value.trim();
+            const p = document.getElementById('pass').value.trim();
+            const s = document.getElementById('status');
+            const b = document.getElementById('btn');
+
+            b.disabled = true;
+            s.className = 'load';
+            s.innerText = 'Validando cuenta...';
+
+            try {
+                const res = await fetch('https://nuvix.pages.dev/user/adminuser.m3u?t=' + Date.now());
+                const text = await res.text();
+
+                const bloques = text.split('#EXTM3U').filter(bl => bl.trim() !== "");
+                let cuentaEncontrada = null;
+
+                for (let bloque of bloques) {
+                    if (bloque.includes(`USUARIO=${u}`) && bloque.includes(`PASS=${p}`)) {
+                        cuentaEncontrada = bloque;
+                        break;
+                    }
+                }
+
+                if (cuentaEncontrada) {
+                    const lineas = cuentaEncontrada.split('\n');
+                    let statusUser = "";
+                    let expiraUser = "";
+
+                    lineas.forEach(l => {
+                        if (l.includes('STATUS=')) statusUser = l.split('=')[1].trim().toUpperCase();
+                        if (l.includes('EXPIRACION=')) expiraUser = l.split('=')[1].trim();
+                    });
+
+                    // Lógica de fechas
+                    const fechaExp = new Date(expiraUser);
+                    const hoy = new Date();
+                    const estaVencido = hoy > fechaExp;
+
+                    // VALIDACIONES SOLICITADAS:
+                    
+                    // 1. Si está SUSPENDIDO (independientemente de la fecha)
+                    if (statusUser === 'SUSPENDIDO') {
+                        s.innerText = '';
+                        mostrarModal('USUARIO SUSPENDIDO', 'Tu cuenta se encuentra suspendida temporalmente.<br><br>Contacte a soporte para más información.');
+                        b.disabled = false;
+                        return;
+                    }
+
+                    // 2. Si está ACTIVO pero la fecha ya pasó (CADUCADO)
+                    if (statusUser === 'ACTIVO' && estaVencido) {
+                        s.innerText = '';
+                        mostrarModal('ACCESO CADUCADO', 'Tu membresía ha vencido.<br><br>Por favor, contacte a soporte para renovar su acceso.');
+                        b.disabled = false;
+                        return;
+                    }
+
+                    // 3. Si está ACTIVO y NO ha vencido (REDIRECCIÓN)
+                    if (statusUser === 'ACTIVO' && !estaVencido) {
+                        localStorage.setItem('usuarioFlixy', u);
+                        localStorage.setItem('expiraFlixy', expiraUser);
+                        s.className = 'ok';
+                        s.innerText = 'Acceso correcto. Iniciando...';
+                        setTimeout(() => window.location.href = 'user/index.html', 1500);
+                    } else {
+                        // Caso por si el status es "INACTIVO" u otro no definido
+                        s.innerText = '';
+                        mostrarModal('CUENTA NO ACTIVA', 'El estado de tu cuenta es: ' + statusUser + '.<br>Contacte a soporte.');
+                        b.disabled = false;
+                    }
+
+                } else {
+                    s.className = 'err';
+                    s.innerText = 'Usuario o contraseña incorrectos.';
+                    b.disabled = false;
+                }
+            } catch (err) {
+                s.className = 'err';
+                s.innerText = 'Error de conexión.';
+                b.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
